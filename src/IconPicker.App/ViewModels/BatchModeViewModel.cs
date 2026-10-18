@@ -70,14 +70,15 @@ public sealed partial class BatchModeViewModel : ObservableObject
 
     public string SelectedRowHeader => SelectedRow is null ? "" : Strings.Format("SidePanelHeader", SelectedRow.Title);
 
+    /// <summary>Folders that already have a working icon are listed. Every kind is listed to start with; turning one off hides it.</summary>
     [ObservableProperty]
-    public partial bool HideFoldersWithIcon { get; set; }
+    public partial bool ShowFoldersWithIcon { get; set; } = true;
 
     [ObservableProperty]
-    public partial bool HideFoldersWithOnlyPictures { get; set; }
+    public partial bool ShowFoldersWithOnlyPictures { get; set; } = true;
 
     [ObservableProperty]
-    public partial bool HideFoldersWithoutMatch { get; set; }
+    public partial bool ShowFoldersWithoutMatch { get; set; } = true;
 
     /// <summary>The "Select all" box: ticked when every shown row that can be is, empty when none is, in between otherwise.</summary>
     public bool? SelectAllState
@@ -92,7 +93,7 @@ public sealed partial class BatchModeViewModel : ObservableObject
 
     public bool CanSelectAll => _shownRows.Exists(row => row.CanCheck);
 
-    private bool IsFiltered => HideFoldersWithIcon || HideFoldersWithOnlyPictures || HideFoldersWithoutMatch;
+    private bool IsFiltered => !ShowFoldersWithIcon || !ShowFoldersWithOnlyPictures || !ShowFoldersWithoutMatch;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsEmpty))]
@@ -255,17 +256,17 @@ public sealed partial class BatchModeViewModel : ObservableObject
         OnPropertyChanged(nameof(SelectAllState));
     }
 
-    partial void OnHideFoldersWithIconChanged(bool value)
+    partial void OnShowFoldersWithIconChanged(bool value)
     {
         RebuildVisibleRows();
     }
 
-    partial void OnHideFoldersWithOnlyPicturesChanged(bool value)
+    partial void OnShowFoldersWithOnlyPicturesChanged(bool value)
     {
         RebuildVisibleRows();
     }
 
-    partial void OnHideFoldersWithoutMatchChanged(bool value)
+    partial void OnShowFoldersWithoutMatchChanged(bool value)
     {
         RebuildVisibleRows();
     }
@@ -356,9 +357,9 @@ public sealed partial class BatchModeViewModel : ObservableObject
 
     private bool IsShown(BatchRowViewModel row)
     {
-        return !(HideFoldersWithIcon && !row.State.NeedsIcon)
-            && !(HideFoldersWithOnlyPictures && row.HasOnlyPictures)
-            && !(HideFoldersWithoutMatch && row.HasNoMatch);
+        return (ShowFoldersWithIcon || row.State.NeedsIcon)
+            && (ShowFoldersWithOnlyPictures || !row.HasOnlyPictures)
+            && (ShowFoldersWithoutMatch || !row.HasNoMatch);
     }
 
     private void UpdateCounts()

@@ -103,35 +103,35 @@
   </data>
 
   <!-- Batch mode -->
-  <data name="HideFiltersLabel.Text" xml:space="preserve">
-    <value>Hide:</value>
+  <data name="ShowFiltersLabel.Text" xml:space="preserve">
+    <value>Show</value>
   </data>
-  <data name="HideFoldersWithIcon.Content" xml:space="preserve">
+  <data name="ShowFoldersWithIcon.Content" xml:space="preserve">
     <value>Already Set</value>
   </data>
-  <data name="HideFoldersWithIcon.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Hide folders that already have a working icon.</value>
+  <data name="ShowFoldersWithIcon.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Folders that already have a working icon. Turn off to hide them.</value>
   </data>
-  <data name="HideFoldersWithIcon.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Hide Folders That Already Have an Icon</value>
+  <data name="ShowFoldersWithIcon.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Show Folders That Already Have an Icon</value>
   </data>
-  <data name="HideFoldersWithOnlyPictures.Content" xml:space="preserve">
+  <data name="ShowFoldersWithOnlyPictures.Content" xml:space="preserve">
     <value>Only Pictures</value>
   </data>
-  <data name="HideFoldersWithOnlyPictures.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Hide folders where every icon found is a picture or an SVG, with no exe, .ico or shortcut icon. A folder whose icon you picked by hand stays.</value>
+  <data name="ShowFoldersWithOnlyPictures.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Folders where every icon found is a picture or an SVG, with no exe, .ico or shortcut icon. Turn off to hide them; a folder whose icon you picked by hand stays.</value>
   </data>
-  <data name="HideFoldersWithOnlyPictures.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Hide Folders with Only Pictures</value>
+  <data name="ShowFoldersWithOnlyPictures.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Show Folders with Only Pictures</value>
   </data>
-  <data name="HideFoldersWithoutMatch.Content" xml:space="preserve">
+  <data name="ShowFoldersWithoutMatch.Content" xml:space="preserve">
     <value>No Match</value>
   </data>
-  <data name="HideFoldersWithoutMatch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Hide folders where no icon was found.</value>
+  <data name="ShowFoldersWithoutMatch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Folders where no icon was found. Turn off to hide them.</value>
   </data>
-  <data name="HideFoldersWithoutMatch.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Hide Folders Where No Icon Was Found</value>
+  <data name="ShowFoldersWithoutMatch.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Show Folders Where No Icon Was Found</value>
   </data>
   <data name="SelectAllCheckBox.Content" xml:space="preserve">
     <value>Select All</value>

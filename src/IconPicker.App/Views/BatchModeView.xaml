@@ -7,7 +7,7 @@
     xmlns:viewModels="using:IconPicker.App.ViewModels">
   <UserControl.Resources>
     <CollectionViewSource x:Name="RowsSource" />
-    <!-- The filters: small pill-shaped toggles that light up when on. -->
+    <!-- The filters: small pill-shaped toggles, lit while their folders are listed. -->
     <Style x:Key="FilterChipStyle" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
       <Setter Property="CornerRadius" Value="14" />
       <Setter Property="MinHeight" Value="28" />
@@ -44,10 +44,10 @@
             IsEnabled="{x:Bind ViewModel.CanSelectAll, Mode=OneWay}" />
         <!-- Kept together, so the label never wraps away from its filters. -->
         <StackPanel Orientation="Horizontal" Spacing="8">
-          <TextBlock x:Uid="HideFiltersLabel" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-          <ToggleButton x:Uid="HideFoldersWithIcon" IsChecked="{x:Bind ViewModel.HideFoldersWithIcon, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
-          <ToggleButton x:Uid="HideFoldersWithOnlyPictures" IsChecked="{x:Bind ViewModel.HideFoldersWithOnlyPictures, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
-          <ToggleButton x:Uid="HideFoldersWithoutMatch" IsChecked="{x:Bind ViewModel.HideFoldersWithoutMatch, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
+          <TextBlock x:Uid="ShowFiltersLabel" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+          <ToggleButton x:Uid="ShowFoldersWithIcon" IsChecked="{x:Bind ViewModel.ShowFoldersWithIcon, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
+          <ToggleButton x:Uid="ShowFoldersWithOnlyPictures" IsChecked="{x:Bind ViewModel.ShowFoldersWithOnlyPictures, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
+          <ToggleButton x:Uid="ShowFoldersWithoutMatch" IsChecked="{x:Bind ViewModel.ShowFoldersWithoutMatch, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
         </StackPanel>
       </controls:WrapPanel>
       <StackPanel Grid.Column="1" VerticalAlignment="Top" Orientation="Horizontal" Spacing="12" Visibility="{x:Bind ViewModel.IsScanning, Mode=OneWay}">
