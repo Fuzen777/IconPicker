@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="IconPicker.App.Views.SingleModeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:IconPicker.App.Controls">
+  <Grid ColumnSpacing="24" RowSpacing="12">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="340" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <controls:StatusBar Grid.ColumnSpan="2" Status="{x:Bind ViewModel.Status}" />
+
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="12" Padding="0,0,12,0">
+        <!-- Current and new side by side, so the buttons stay in view. -->
+        <Grid ColumnSpacing="16" RowSpacing="8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <TextBlock x:Uid="CurrentIconHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+          <Border Grid.Row="1" Style="{StaticResource IconPreviewCardStyle}">
+            <Image Source="{x:Bind ViewModel.CurrentIcon, Mode=OneWay}" Width="112" Height="112" />
+          </Border>
+          <TextBlock Grid.Row="2" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind ViewModel.CurrentIconDescription, Mode=OneWay}" TextWrapping="Wrap" />
+
+          <TextBlock x:Uid="NewIconHeader" Grid.Column="1" Style="{StaticResource BodyStrongTextBlockStyle}" />
+          <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource IconPreviewCardStyle}">
+            <Image Source="{x:Bind ViewModel.NewIcon, Mode=OneWay}" Width="112" Height="112" />
+          </Border>
+          <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind ViewModel.NewIconDescription, Mode=OneWay}" TextWrapping="Wrap" />
+        </Grid>
+        <InfoBar x:Uid="VersionFolderWarning" IsClosable="False" Severity="Warning" IsOpen="{x:Bind ViewModel.IsVersionFolderWarningOpen, Mode=OneWay}" />
+
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button x:Uid="ApplyButton" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.ApplyCommand}" />
+          <Button x:Uid="RemoveIconButton" Command="{x:Bind ViewModel.RemoveCommand}" />
+        </StackPanel>
+        <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay}" />
+      </StackPanel>
+    </ScrollViewer>
+
+    <controls:IconPickerControl Grid.Row="1" Grid.Column="1" ViewModel="{x:Bind ViewModel.Picker}" />
+  </Grid>
+</UserControl>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tiles shared by the folder's picker and the builder. -->
+<ResourceDictionary
+    x:Class="IconPicker.App.Controls.TileTemplates"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewModels="using:IconPicker.App.ViewModels">
+
+  <!-- An icon a folder can take: its thumbnail, a badge for its kind, its name and size. -->
+  <DataTemplate x:Key="CandidateTileTemplate" x:DataType="viewModels:CandidateViewModel">
+    <Grid Width="124" Height="136" Padding="6" RowSpacing="2" AutomationProperties.Name="{x:Bind FileName}" ToolTipService.ToolTip="{x:Bind ToolTipText}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Image Width="64" Height="64" Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="Uniform" />
+      <Border Padding="4,1" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="4">
+        <TextBlock FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Badge}" />
+      </Border>
+      <TextBlock Grid.Row="1" MaxWidth="112" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind FileName}" TextTrimming="CharacterEllipsis" />
+      <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind DetailText}" />
+    </Grid>
+  </DataTemplate>
+
+  <!-- A saved icon in My icons. -->
+  <DataTemplate x:Key="SavedIconTileTemplate" x:DataType="viewModels:SavedIconViewModel">
+    <Grid Width="112" Height="112" Padding="6" RowSpacing="4" AutomationProperties.Name="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Image Width="64" Height="64" Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="Uniform" />
+      <TextBlock Grid.Row="1" MaxWidth="100" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" />
+    </Grid>
+  </DataTemplate>
+
+  <!-- A built-in icon: drawn small, in the theme's text color. -->
+  <DataTemplate x:Key="BuiltInIconTileTemplate" x:DataType="viewModels:BuiltInIconViewModel">
+    <Grid Width="56" Height="56" AutomationProperties.Name="{x:Bind Name}" ToolTipService.ToolTip="{x:Bind Name}">
+      <Image Width="32" Height="32" Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="Uniform" />
+    </Grid>
+  </DataTemplate>
+
+  <!-- A color to pick. -->
+  <DataTemplate x:Key="ColorSwatchTemplate" x:DataType="viewModels:ColorSwatchViewModel">
+    <Border
+        Width="28"
+        Height="28"
+        Background="{x:Bind Brush}"
+        BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="4"
+        AutomationProperties.Name="{x:Bind Name}"
+        ToolTipService.ToolTip="{x:Bind Name}" />
+  </DataTemplate>
+</ResourceDictionary>

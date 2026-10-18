@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Everything that scans, ranks, converts and writes folder icons. No UI dependency, so it is unit-tested and shared by the app and its elevated helper. -->
+  <PropertyGroup>
+    <RootNamespace>IconPicker.Core</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+    <!-- SVG rendering and icon composition. -->
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" />
+    <PackageReference Include="Svg.Skia" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="IconPicker.Core.Tests" />
+  </ItemGroup>
+</Project>

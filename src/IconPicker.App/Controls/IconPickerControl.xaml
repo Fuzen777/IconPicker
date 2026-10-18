@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="IconPicker.App.Controls.IconPickerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:IconPicker.App.Controls">
+  <Grid RowSpacing="8">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Grid ColumnSpacing="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBlock VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind ViewModel.HeaderText, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+      <CheckBox x:Uid="IncludeShortcutsCheckBox" Grid.Column="1" IsChecked="{x:Bind ViewModel.IncludeShortcuts, Mode=TwoWay}" />
+      <HyperlinkButton
+          x:Uid="BackToCandidatesButton"
+          Grid.Column="2"
+          Command="{x:Bind ViewModel.BackToCandidatesCommand, Mode=OneWay}"
+          Visibility="{x:Bind ViewModel.IsBrowsingModule, Mode=OneWay}" />
+    </Grid>
+
+    <!-- Icons from elsewhere, on a row of their own that wraps: the picker can be narrow (batch mode's side panel, a small window). -->
+    <controls:WrapPanel Grid.Row="1" Spacing="8">
+      <Button x:Uid="BrowseButton" Command="{x:Bind ViewModel.BrowseCommand, Mode=OneWay}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <FontIcon Glyph="&#xE8E5;" FontSize="14" />
+          <TextBlock x:Uid="BrowseButtonText" />
+        </StackPanel>
+      </Button>
+      <Button x:Uid="PickIconButton" Command="{x:Bind ViewModel.PickIconCommand, Mode=OneWay}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <FontIcon Glyph="&#xE790;" FontSize="14" />
+          <TextBlock x:Uid="PickIconButtonText" />
+        </StackPanel>
+      </Button>
+      <Button x:Uid="CustomizeButton" Command="{x:Bind ViewModel.CustomizeCommand, Mode=OneWay}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <FontIcon Glyph="&#xE771;" FontSize="14" />
+          <TextBlock x:Uid="CustomizeButtonText" />
+        </StackPanel>
+      </Button>
+    </controls:WrapPanel>
+
+    <StackPanel Grid.Row="2" Spacing="4">
+      <InfoBar Severity="Warning" IsOpen="{x:Bind ViewModel.IsProblemOpen, Mode=TwoWay}" Message="{x:Bind ViewModel.ProblemText, Mode=OneWay}" />
+      <TextBlock
+          x:Uid="SearchStoppedText"
+          Style="{StaticResource CaptionTextBlockStyle}"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          TextWrapping="Wrap"
+          Visibility="{x:Bind ViewModel.IsSearchStopped, Mode=OneWay}" />
+    </StackPanel>
+
+    <GridView
+        x:Name="CandidateGrid"
+        Grid.Row="3"
+        ItemsSource="{x:Bind ViewModel.VisibleCandidates, Mode=OneWay}"
+        ItemTemplate="{StaticResource CandidateTileTemplate}"
+        SelectionMode="Single"
+        SelectionChanged="OnCandidateSelectionChanged" />
+
+    <ProgressRing Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+    <StackPanel Grid.Row="3" MaxWidth="360" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}">
+      <TextBlock x:Uid="NoCandidatesTitle" HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" />
+      <TextBlock x:Uid="NoCandidatesMessage" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextAlignment="Center" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <HyperlinkButton Grid.Row="4" Content="{x:Bind ViewModel.ShowAllText, Mode=OneWay}" Command="{x:Bind ViewModel.ShowAllCommand, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasMore, Mode=OneWay}" />
+  </Grid>
+</UserControl>

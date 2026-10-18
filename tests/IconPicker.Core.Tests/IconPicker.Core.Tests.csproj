@@ -1,0 +1,16 @@
+<Project Sdk="MSTest.Sdk">
+  <PropertyGroup>
+    <RootNamespace>IconPicker.Core.Tests</RootNamespace>
+    <!-- Like the app: only the win-x64 Skia and HarfBuzz natives are copied, not every platform's. -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\IconPicker.Core\IconPicker.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The app's built-in icons, checked as shipped. -->
+    <None Include="..\..\src\IconPicker.App\Assets\FluentIcons.zip" Link="Assets\FluentIcons.zip" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

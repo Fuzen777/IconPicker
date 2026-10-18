@@ -1,0 +1,15 @@
+<Project>
+  <!-- The Skia and HarfBuzz native packages ship their .pdb files beside the native libraries (about 120 MB for win-x64). They are kept out of every build and publish. -->
+  <Target Name="DropNativePackagePdbs" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="'%(Extension)' == '.pdb'" />
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'%(Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="DropNativePackagePdbsFromPublish" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.pdb' and $([System.String]::Copy('%(Filename)').StartsWith('lib'))" />
+    </ItemGroup>
+  </Target>
+</Project>

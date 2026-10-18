@@ -1,0 +1,5 @@
+# Windows line endings in every checkout: dotnet format (Scripts\Check.cmd) expects CRLF.
+* text=auto eol=crlf
+*.ico binary
+*.png binary
+*.zip binary

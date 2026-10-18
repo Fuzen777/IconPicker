@@ -1,0 +1,24 @@
+<Project>
+  <!--
+    Build output goes to artifacts\ by default. A Directory.Build.user.props next to this file (ignored by git) can set IconPickerBuildRoot to build elsewhere,
+    such as outside a synced folder that would lock files mid-build; so can -p:IconPickerBuildRoot=... or an environment variable of that name.
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.user.props" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.user.props')" />
+  <PropertyGroup>
+    <IconPickerBuildRoot Condition="'$(IconPickerBuildRoot)' == ''">$(MSBuildThisFileDirectory)artifacts</IconPickerBuildRoot>
+    <BaseOutputPath>$(IconPickerBuildRoot)\bin\$(MSBuildProjectName)\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(IconPickerBuildRoot)\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <!-- The app is x64 only through its RuntimeIdentifier; the projects themselves stay AnyCPU so every build lands in the same folder. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+</Project>

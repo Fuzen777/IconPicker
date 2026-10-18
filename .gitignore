@@ -1,0 +1,9 @@
+# Build output (see Directory.Build.props).
+artifacts/
+bin/
+obj/
+TestResults/
+# Where this PC builds; see Directory.Build.props.
+Directory.Build.user.props
+.vs/
+*.user

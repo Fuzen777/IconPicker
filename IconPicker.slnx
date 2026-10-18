@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/IconPicker.App/IconPicker.App.csproj" />
+    <Project Path="src/IconPicker.Core/IconPicker.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/IconPicker.Core.Tests/IconPicker.Core.Tests.csproj" />
+  </Folder>
+</Solution>

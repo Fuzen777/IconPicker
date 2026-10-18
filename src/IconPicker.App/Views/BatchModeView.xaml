@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="IconPicker.App.Views.BatchModeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:IconPicker.App.Controls"
+    xmlns:viewModels="using:IconPicker.App.ViewModels">
+  <UserControl.Resources>
+    <CollectionViewSource x:Name="RowsSource" />
+  </UserControl.Resources>
+
+  <Grid ColumnSpacing="24" RowSpacing="12">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="400" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <controls:StatusBar Grid.ColumnSpan="2" Status="{x:Bind ViewModel.Status}" />
+
+    <!-- Select all, filters, and search progress while rows are being filled in. -->
+    <Grid Grid.Row="1" Grid.ColumnSpan="2" ColumnSpacing="16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <controls:WrapPanel Spacing="16">
+        <CheckBox
+            x:Uid="SelectAllCheckBox"
+            Command="{x:Bind ViewModel.ToggleSelectAllCommand}"
+            IsChecked="{x:Bind ViewModel.SelectAllState, Mode=OneWay}"
+            IsEnabled="{x:Bind ViewModel.CanSelectAll, Mode=OneWay}" />
+        <CheckBox x:Uid="HideFoldersWithIcon" IsChecked="{x:Bind ViewModel.HideFoldersWithIcon, Mode=TwoWay}" />
+        <CheckBox x:Uid="HideFoldersWithOnlyPictures" IsChecked="{x:Bind ViewModel.HideFoldersWithOnlyPictures, Mode=TwoWay}" />
+        <CheckBox x:Uid="HideFoldersWithoutMatch" IsChecked="{x:Bind ViewModel.HideFoldersWithoutMatch, Mode=TwoWay}" />
+      </controls:WrapPanel>
+      <StackPanel Grid.Column="1" VerticalAlignment="Top" Orientation="Horizontal" Spacing="12" Visibility="{x:Bind ViewModel.IsScanning, Mode=OneWay}">
+        <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind ViewModel.ProgressText, Mode=OneWay}" />
+        <ProgressBar Width="160" VerticalAlignment="Center" Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}" />
+        <Button x:Uid="CancelScanButton" Command="{x:Bind ViewModel.CancelScanCommand}" />
+      </StackPanel>
+    </Grid>
+
+    <ListView x:Name="RowList" Grid.Row="2" SelectionMode="Single" SelectionChanged="OnRowSelectionChanged">
+      <ListView.GroupStyle>
+        <GroupStyle>
+          <GroupStyle.HeaderTemplate>
+            <DataTemplate x:DataType="viewModels:BatchRowGroup">
+              <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind Name}" />
+            </DataTemplate>
+          </GroupStyle.HeaderTemplate>
+        </GroupStyle>
+      </ListView.GroupStyle>
+      <ListView.ItemTemplate>
+        <DataTemplate x:DataType="viewModels:BatchRowViewModel">
+          <Grid MinHeight="56" Padding="0,6" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <CheckBox
+                MinWidth="0"
+                VerticalAlignment="Center"
+                AutomationProperties.Name="{x:Bind Title}"
+                IsChecked="{x:Bind IsChecked, Mode=TwoWay}"
+                IsEnabled="{x:Bind CanCheck, Mode=OneWay}" />
+            <Image Grid.Column="1" Width="32" Height="32" Source="{x:Bind CurrentIcon, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind CurrentIconDescription, Mode=OneWay}" />
+            <FontIcon Grid.Column="2" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Glyph="&#xE72A;" />
+            <Grid Grid.Column="3" Width="32" Height="32">
+              <Image Source="{x:Bind PredictedIcon, Mode=OneWay}" Opacity="{x:Bind PredictionOpacity, Mode=OneWay}" />
+              <ProgressRing Width="20" Height="20" IsActive="{x:Bind IsSearching, Mode=OneWay}" />
+            </Grid>
+            <StackPanel Grid.Column="4" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{x:Bind TitleToolTip}" />
+              <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind DetailText, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <FontIcon
+                x:Uid="VersionFolderRowWarning"
+                Grid.Column="5"
+                Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                Glyph="&#xE7BA;"
+                Visibility="{x:Bind HasVersionFolderWarning, Mode=OneWay}" />
+          </Grid>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+
+    <!-- The deep search walks the whole tree before any row exists. -->
+    <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Visibility="{x:Bind ViewModel.IsFindingFolders, Mode=OneWay}">
+      <ProgressRing IsActive="True" />
+      <TextBlock x:Uid="FindingAppFolders" />
+    </StackPanel>
+    <StackPanel Grid.Row="2" MaxWidth="420" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}">
+      <TextBlock x:Uid="NoRowsTitle" HorizontalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}" />
+      <TextBlock x:Uid="NoRowsMessage" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextAlignment="Center" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <!-- Side panel: the selected row's picker. -->
+    <Border
+        Grid.Row="2"
+        Grid.Column="1"
+        Padding="16"
+        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="8">
+      <Grid RowSpacing="8">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.SelectedRowHeader, Mode=OneWay}" TextTrimming="CharacterEllipsis" Visibility="{x:Bind ViewModel.HasSelection, Mode=OneWay}" />
+        <controls:IconPickerControl Grid.Row="1" ViewModel="{x:Bind ViewModel.SelectedPicker, Mode=OneWay}" Visibility="{x:Bind ViewModel.HasSelection, Mode=OneWay}" />
+        <TextBlock
+            x:Uid="SelectRowHint"
+            Grid.RowSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            TextAlignment="Center"
+            TextWrapping="Wrap"
+            Visibility="{x:Bind ViewModel.HasNoSelection, Mode=OneWay}" />
+      </Grid>
+    </Border>
+
+    <!-- Footer: counts and the two actions. -->
+    <Grid Grid.Row="3" Grid.ColumnSpan="2" ColumnSpacing="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind ViewModel.SummaryText, Mode=OneWay}" />
+      <Button Grid.Column="1" Command="{x:Bind ViewModel.RemoveCommand}" Content="{x:Bind ViewModel.RemoveText, Mode=OneWay}" />
+      <Button Grid.Column="2" Command="{x:Bind ViewModel.ApplyCommand}" Content="{x:Bind ViewModel.ApplyText, Mode=OneWay}" Style="{StaticResource AccentButtonStyle}" />
+    </Grid>
+    <ProgressBar Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Top" IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay}" />
+  </Grid>
+</UserControl>

@@ -1,0 +1,11 @@
+LoadLibraryEx
+FreeLibrary
+EnumResourceNames
+FindResource
+LoadResource
+LockResource
+SizeofResource
+SHChangeNotify
+ShellLink
+IShellLinkW
+IPersistFile
