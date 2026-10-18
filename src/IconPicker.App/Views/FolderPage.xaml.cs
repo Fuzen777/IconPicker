@@ -7,40 +7,46 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace IconPicker.App.Views;
 
-public sealed partial class FolderPage : Page, IHasUnappliedChanges
+/// <summary>
+/// The open folder. The page is kept while other pages are visited, and shows whichever folder the navigator holds: the same one when coming back, as it was left.
+/// </summary>
+public sealed partial class FolderPage : Page
 {
     private bool _isSyncingModeSelector;
 
     public FolderPage()
     {
         InitializeComponent();
+        NavigationCacheMode = NavigationCacheMode.Required;
         ToolTipService.SetToolTip(DeepToggle, Strings.Get("DeepToggleToolTip"));
         ToolTipService.SetToolTip(LibraryToggle, Strings.Get("LibraryToggleToolTip"));
     }
 
     public FolderViewModel? ViewModel { get; private set; }
 
-    public bool HasUnappliedChanges => ViewModel?.HasUnappliedChanges == true;
-
-    public string DiscardChangesTitle => Strings.Get("DiscardChangesTitle");
-
-    public string DiscardChangesMessage => Strings.Get("DiscardChangesMessage");
-
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
-        ViewModel = new FolderViewModel((FolderRequest)e.Parameter, App.Services);
+        var viewModel = (FolderViewModel)e.Parameter;
+        if (ReferenceEquals(viewModel, ViewModel))
+        {
+            // Back to the same folder: everything is as it was left.
+            return;
+        }
+        if (ViewModel is not null)
+        {
+            ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+        ViewModel = viewModel;
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         Bindings.Update();
-        await ViewModel.InitializeAsync();
+        ShowContent();
+        await viewModel.InitializeAsync();
         // Single is the mode's default value, so detecting it raises no change to sync from.
-        SyncModeSelector();
-    }
-
-    protected override void OnNavigatedFrom(NavigationEventArgs e)
-    {
-        base.OnNavigatedFrom(e);
-        ViewModel?.Dispose();
+        if (ReferenceEquals(viewModel, ViewModel))
+        {
+            SyncModeSelector();
+        }
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs eventArgs)
@@ -51,14 +57,19 @@ public sealed partial class FolderPage : Page, IHasUnappliedChanges
                 SyncModeSelector();
                 break;
             case nameof(FolderViewModel.Content):
-                ModeContent.Content = ViewModel!.Content switch
-                {
-                    SingleModeViewModel single => new SingleModeView(single),
-                    BatchModeViewModel batch => new BatchModeView(batch),
-                    _ => null,
-                };
+                ShowContent();
                 break;
         }
+    }
+
+    private void ShowContent()
+    {
+        ModeContent.Content = ViewModel!.Content switch
+        {
+            SingleModeViewModel single => new SingleModeView(single),
+            BatchModeViewModel batch => new BatchModeView(batch),
+            _ => null,
+        };
     }
 
     private void SyncModeSelector()

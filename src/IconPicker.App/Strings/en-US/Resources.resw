@@ -512,6 +512,9 @@
   <data name="DiscardChangesConfirm" xml:space="preserve">
     <value>Discard</value>
   </data>
+  <data name="DiscardFolderChangesMessage" xml:space="preserve">
+    <value>The icons picked in {0} haven't been applied yet, and opening another folder replaces it.</value>
+  </data>
   <data name="FolderMissingTitle" xml:space="preserve">
     <value>Folder not found</value>
   </data>

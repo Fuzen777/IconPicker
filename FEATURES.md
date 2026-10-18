@@ -7,7 +7,8 @@
 - **One window**: launching the app again while it is open hands the folder to the running window and brings it to the front.
 - **Mode detection**: a folder holding a game or app (a usable .exe directly in it, or in a bin-style or version subfolder such as `bin\x64` or `app-1.2.3`) opens in "This folder"; a drive opens in "Each subfolder" with Deep search on; anything else opens in "Each subfolder". The switch under the folder's path changes mode at any time. "This folder" is unavailable for a drive, which can't take a folder icon.
 - **Shortcuts to folders**: dropping a shortcut to a folder, or passing one on the command line, opens its folder in "This folder", with the shortcut named under the path. Apply gives the folder its icon and points the shortcut at it, since Explorer doesn't reliably show a folder's new icon on shortcuts made before it; Remove icon takes both off (an icon given to the shortcut by hand from elsewhere stays).
-- **Unapplied picks**: leaving the folder, switching mode or opening another folder after picking an icon or ticking a folder by hand asks before discarding it, as long as something is still ticked to apply or remove.
+- **Folder tab**: the folder opened last gets a tab in the navigation pane, after My icons, named after it (its full path on hover). Visiting Home, My icons or Settings keeps it exactly as it was: search results, ticks, icons picked by hand, the selected row, and a search still running. The tab or Back returns to it. Opening another folder replaces it, and Back no longer leads to the old one. It lasts until the app closes.
+- **Unapplied picks**: opening another folder, switching mode or turning Deep search on or off after picking an icon or ticking a folder by hand asks before discarding it, as long as something is still ticked to apply or remove. The question names the folder when it isn't on screen.
 
 ## This Folder
 

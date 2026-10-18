@@ -38,6 +38,7 @@ public sealed partial class MainWindow : Window
         AppWindow.Changed += OnAppWindowChanged;
         AppWindow.Closing += OnAppWindowClosing;
         _navigator.Initialize(ContentFrame);
+        _navigator.CurrentFolderChanged += OnCurrentFolderChanged;
     }
 
     private OverlappedPresenter Presenter => (OverlappedPresenter)AppWindow.Presenter;
@@ -163,6 +164,10 @@ public sealed partial class MainWindow : Window
         {
             await _navigator.OpenMyIconsAsync();
         }
+        else if (ReferenceEquals(args.InvokedItemContainer, FolderItem))
+        {
+            await _navigator.ReturnToFolderAsync();
+        }
         // The click already moved the selection, even when leaving the page was cancelled.
         SyncNavigationSelection();
     }
@@ -178,9 +183,22 @@ public sealed partial class MainWindow : Window
         {
             HomePage => HomeItem,
             MyIconsPage => MyIconsItem,
+            FolderPage => FolderItem,
             SettingsPage => Navigation.SettingsItem,
             _ => null,
         };
+    }
+
+    private void OnCurrentFolderChanged(object? sender, EventArgs eventArgs)
+    {
+        if (_navigator.CurrentFolder is not { } folder)
+        {
+            FolderItem.Visibility = Visibility.Collapsed;
+            return;
+        }
+        FolderItem.Content = folder.TabName;
+        ToolTipService.SetToolTip(FolderItem, folder.Title);
+        FolderItem.Visibility = Visibility.Visible;
     }
 
     private void OnDragOver(object sender, DragEventArgs e)

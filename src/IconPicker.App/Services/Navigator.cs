@@ -28,10 +28,18 @@ internal sealed record FolderRequest(IReadOnlyList<string> FolderPaths, FolderMo
     }
 }
 
-/// <summary>Moves between pages, asking first when leaving would lose work: icons picked but not applied, or an icon being built.</summary>
-internal sealed class Navigator(DialogService dialogs)
+/// <summary>
+/// Moves between pages. The open folder lives here rather than in its page, so visiting another page keeps it exactly as it was, and its tab or Back returns to it.
+/// Opening another folder replaces it, after asking when it has icons picked but not applied; leaving My icons with an icon being built asks too.
+/// </summary>
+internal sealed class Navigator(DialogService dialogs, IServiceProvider services)
 {
     private Frame? _frame;
+
+    /// <summary>The folder opened last, kept until another one replaces it.</summary>
+    public FolderViewModel? CurrentFolder { get; private set; }
+
+    public event EventHandler? CurrentFolderChanged;
 
     private Frame Frame => _frame ?? throw new InvalidOperationException("The navigator has no frame yet.");
 
@@ -80,10 +88,34 @@ internal sealed class Navigator(DialogService dialogs)
             await dialogs.ShowMessageAsync(Strings.Get("FolderMissingTitle"), Strings.Format("FolderMissingMessage", missingFolder));
             return;
         }
-        if (await ConfirmLeavingAsync())
+        if (!await ConfirmLeavingAsync() || !await ConfirmReplacingFolderAsync())
         {
-            Frame.Navigate(typeof(FolderPage), request);
+            return;
         }
+        CurrentFolder?.Dispose();
+        CurrentFolder = new FolderViewModel(request, services);
+        // Back never returns to a folder that was replaced.
+        foreach (var entry in Frame.BackStack.Where(entry => entry.SourcePageType == typeof(FolderPage)).ToList())
+        {
+            Frame.BackStack.Remove(entry);
+        }
+        CurrentFolderChanged?.Invoke(this, EventArgs.Empty);
+        Frame.Navigate(typeof(FolderPage), CurrentFolder);
+    }
+
+    /// <summary>Back to the open folder, as it was left.</summary>
+    public async Task ReturnToFolderAsync()
+    {
+        if (CurrentFolder is not null && Frame.Content is not FolderPage && await ConfirmLeavingAsync())
+        {
+            Frame.Navigate(typeof(FolderPage), CurrentFolder);
+        }
+    }
+
+    private async Task<bool> ConfirmReplacingFolderAsync()
+    {
+        return CurrentFolder is not { HasUnappliedChanges: true }
+            || await dialogs.ConfirmAsync(Strings.Get("DiscardChangesTitle"), Strings.Format("DiscardFolderChangesMessage", CurrentFolder.TabName), Strings.Get("DiscardChangesConfirm"));
     }
 
     private async Task<bool> ConfirmLeavingAsync()

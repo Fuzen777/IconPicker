@@ -46,6 +46,12 @@
             <FontIcon Glyph="&#xE790;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
+        <!-- The folder opened last, named after it once there is one; it comes back as it was left. -->
+        <NavigationViewItem x:Name="FolderItem" Visibility="Collapsed">
+          <NavigationViewItem.Icon>
+            <FontIcon Glyph="&#xE8B7;" />
+          </NavigationViewItem.Icon>
+        </NavigationViewItem>
       </NavigationView.MenuItems>
       <Frame x:Name="ContentFrame" Navigated="OnFrameNavigated" />
     </NavigationView>
