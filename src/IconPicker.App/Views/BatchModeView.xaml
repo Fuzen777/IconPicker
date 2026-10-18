@@ -7,6 +7,13 @@
     xmlns:viewModels="using:IconPicker.App.ViewModels">
   <UserControl.Resources>
     <CollectionViewSource x:Name="RowsSource" />
+    <!-- The filters: small pill-shaped toggles that light up when on. -->
+    <Style x:Key="FilterChipStyle" TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="MinHeight" Value="28" />
+      <Setter Property="Padding" Value="12,3,12,4" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
   </UserControl.Resources>
 
   <Grid ColumnSpacing="24" RowSpacing="12">
@@ -35,9 +42,13 @@
             Command="{x:Bind ViewModel.ToggleSelectAllCommand}"
             IsChecked="{x:Bind ViewModel.SelectAllState, Mode=OneWay}"
             IsEnabled="{x:Bind ViewModel.CanSelectAll, Mode=OneWay}" />
-        <CheckBox x:Uid="HideFoldersWithIcon" IsChecked="{x:Bind ViewModel.HideFoldersWithIcon, Mode=TwoWay}" />
-        <CheckBox x:Uid="HideFoldersWithOnlyPictures" IsChecked="{x:Bind ViewModel.HideFoldersWithOnlyPictures, Mode=TwoWay}" />
-        <CheckBox x:Uid="HideFoldersWithoutMatch" IsChecked="{x:Bind ViewModel.HideFoldersWithoutMatch, Mode=TwoWay}" />
+        <!-- Kept together, so the label never wraps away from its filters. -->
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock x:Uid="HideFiltersLabel" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+          <ToggleButton x:Uid="HideFoldersWithIcon" IsChecked="{x:Bind ViewModel.HideFoldersWithIcon, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
+          <ToggleButton x:Uid="HideFoldersWithOnlyPictures" IsChecked="{x:Bind ViewModel.HideFoldersWithOnlyPictures, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
+          <ToggleButton x:Uid="HideFoldersWithoutMatch" IsChecked="{x:Bind ViewModel.HideFoldersWithoutMatch, Mode=TwoWay}" Style="{StaticResource FilterChipStyle}" />
+        </StackPanel>
       </controls:WrapPanel>
       <StackPanel Grid.Column="1" VerticalAlignment="Top" Orientation="Horizontal" Spacing="12" Visibility="{x:Bind ViewModel.IsScanning, Mode=OneWay}">
         <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind ViewModel.ProgressText, Mode=OneWay}" />

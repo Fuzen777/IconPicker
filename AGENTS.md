@@ -11,6 +11,7 @@ title: AGENTS
 ## Rules
 
 - All UI text lives in `src/IconPicker.App/Strings/en-US/Resources.resw`, in English: `x:Uid` in XAML, the `Strings` helper in code. Never hard-code UI text.
+- UI labels use Title Case: buttons, toggles, chips, navigation and mode names, headings, dialog titles and buttons, placeholders and short names. Minor words (a, an, the, and, or, of, to, in, on, for, with, as, at, by, from) stay lowercase unless first or last, and hyphenated words take both capitals (Built-In Icons). Sentences, status texts ("Icon set") and generated names stay in sentence case.
 - `IconPicker.Core` has no UI dependency. Scanning, ranking, conversion and file writing go there, with unit tests; the app only presents and orchestrates.
 - Keep the on-disk format compatible with the script: a copied icon is `folder-icon.ico` (hidden, system) referenced as `IconResource=folder-icon.ico,0`.
 - Meta files (docs, scripts) go at the project root. `src/` holds only what ends up in the build, `tests/` the tests and their fixtures.
@@ -51,7 +52,7 @@ title: AGENTS
 - View models are public (the XAML compiler needs them); their constructors are internal because they take internal services.
 - The data folder is `%LocalAppData%\Icon Picker`, or a `Data` folder next to `IconPicker.exe` when one exists (portable). `DataLocation` decides it once at startup; turning portable on or off in Settings restarts the app with `--move-data`, and the new copy moves the data (`DataFolderMover`) before anything reads it, once the old one has exited. In it: `settings.json`, the elevated helper's `jobs` (never moved), `error.log`, saved icons in `My icons\<id>\` and built icons not saved in `Built\` (deleted after a day).
 - Every SVG goes through `SvgFile` (which removes anything that reaches outside the file) and `SvgRenderer` (which turns off Svg.Skia's own external loading); never hand Svg.Skia a file or stream directly. See [SVG Rendering](DOCUMENTATION/Docs/SVG%20Rendering.md).
-- The open folder's `FolderViewModel` belongs to `Navigator`, not to `FolderPage` (which is cached): visiting other pages leaves it running and as it was, and only opening another folder disposes it, after asking when picks would be lost. Leaving a page asks only for pages implementing `IHasUnappliedChanges` (My icons).
+- The open folder's `FolderViewModel` belongs to `Navigator`, not to `FolderPage` (which is cached): visiting other pages leaves it running and as it was, and only opening another folder disposes it, after asking when picks would be lost. Leaving a page asks only for pages implementing `IHasUnappliedChanges` (My Icons).
 - WinUI shows one `ContentDialog` at a time: custom dialogs go through `DialogService.ShowAsync`, and nothing opens a dialog from inside one (the builder swaps its own panes instead).
 - The right-click entry is written under `HKCU\Software\Classes\{Directory,Directory\Background,Drive}\shell\IconPicker` and points at whichever copy turned it on, so turning it on from a Debug build points it at the build folder.
 - A `DirectoryInfo` from a folder listing caches its attributes: call `Refresh()` before reading them after a change (`FolderIconState.Read` does).

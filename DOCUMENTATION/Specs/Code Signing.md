@@ -8,7 +8,7 @@
 
 ## Goal
 
-An unsigned app downloaded from the internet meets SmartScreen's "Windows protected your PC" screen, its UAC prompt for "Retry as admin" reads "Unknown publisher", and antivirus heuristics trust it less. SmartScreen reputation for unsigned files builds per file, so every new version starts from zero. Signing removes the "Unknown publisher" prompt and lets reputation carry across versions.
+An unsigned app downloaded from the internet meets SmartScreen's "Windows protected your PC" screen, its UAC prompt for "Retry as Admin" reads "Unknown publisher", and antivirus heuristics trust it less. SmartScreen reputation for unsigned files builds per file, so every new version starts from zero. Signing removes the "Unknown publisher" prompt and lets reputation carry across versions.
 
 SignPath Foundation signs open-source projects for free. The certificate is issued to SignPath Foundation, so Windows shows **SignPath Foundation** as the publisher, not the project's author.
 
@@ -84,7 +84,7 @@ From [signpath.org/terms](https://signpath.org/terms), checked in October 2026; 
 
 ## Behavior & UX
 
-- People downloading a signed release see SignPath Foundation as the publisher in SmartScreen and in the UAC prompt of "Retry as admin".
+- People downloading a signed release see SignPath Foundation as the publisher in SmartScreen and in the UAC prompt of "Retry as Admin".
 - SmartScreen may still warn for a while on new releases until the certificate's reputation builds.
 - Nothing changes inside the app.
 

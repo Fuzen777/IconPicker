@@ -29,33 +29,33 @@
 
   <!-- Home -->
   <data name="HomeTitle.Text" xml:space="preserve">
-    <value>Pick folder icons</value>
+    <value>Pick Folder Icons</value>
   </data>
   <data name="HomeIntro.Text" xml:space="preserve">
     <value>Give a folder the icon of the game or app inside it, or any picture you like. Drop a folder anywhere in this window, or choose one.</value>
   </data>
   <data name="HomeDropText.Text" xml:space="preserve">
-    <value>Drop a folder here</value>
+    <value>Drop a Folder Here</value>
   </data>
   <data name="HomeChooseFolderButton.Content" xml:space="preserve">
-    <value>Choose folder…</value>
+    <value>Choose Folder…</value>
   </data>
 
   <!-- Folder page -->
   <data name="ChangeFolderButton.Content" xml:space="preserve">
-    <value>Change folder…</value>
+    <value>Change Folder…</value>
   </data>
   <data name="ModeThisFolder.Text" xml:space="preserve">
-    <value>This folder</value>
+    <value>This Folder</value>
   </data>
   <data name="ModeEachSubfolder.Text" xml:space="preserve">
-    <value>Each subfolder</value>
+    <value>Each Subfolder</value>
   </data>
   <data name="DeepToggle.OnContent" xml:space="preserve">
-    <value>Deep search</value>
+    <value>Deep Search</value>
   </data>
   <data name="DeepToggle.OffContent" xml:space="preserve">
-    <value>Deep search</value>
+    <value>Deep Search</value>
   </data>
   <data name="DeepToggleToolTip" xml:space="preserve">
     <value>Look for game and app folders at any depth instead of taking the direct subfolders.</value>
@@ -64,7 +64,7 @@
     <value>Looking at the folder…</value>
   </data>
   <data name="AllLibrariesTitle" xml:space="preserve">
-    <value>All libraries ({0})</value>
+    <value>All Libraries ({0})</value>
   </data>
   <data name="FolderShortcutText" xml:space="preserve">
     <value>Opened through the shortcut {0}, which shows the icon too</value>
@@ -72,16 +72,16 @@
 
   <!-- Single mode -->
   <data name="CurrentIconHeader.Text" xml:space="preserve">
-    <value>Current icon</value>
+    <value>Current Icon</value>
   </data>
   <data name="NewIconHeader.Text" xml:space="preserve">
-    <value>New icon</value>
+    <value>New Icon</value>
   </data>
   <data name="ApplyButton.Content" xml:space="preserve">
     <value>Apply</value>
   </data>
   <data name="RemoveIconButton.Content" xml:space="preserve">
-    <value>Remove icon</value>
+    <value>Remove Icon</value>
   </data>
   <data name="NoNewIcon" xml:space="preserve">
     <value>Pick an icon on the right.</value>
@@ -96,24 +96,45 @@
     <value>Will be linked to {0}.</value>
   </data>
   <data name="VersionFolderWarning.Title" xml:space="preserve">
-    <value>This link will break at the next update</value>
+    <value>This Link Will Break at the Next Update</value>
   </data>
   <data name="VersionFolderWarning.Message" xml:space="preserve">
-    <value>The file sits in a version folder (such as app-1.2.3), which the app replaces when it updates. Set Icon target to Copy in Settings to avoid this.</value>
+    <value>The file sits in a version folder (such as app-1.2.3), which the app replaces when it updates. Set Icon Target to Copy in Settings to avoid this.</value>
   </data>
 
   <!-- Batch mode -->
+  <data name="HideFiltersLabel.Text" xml:space="preserve">
+    <value>Hide:</value>
+  </data>
   <data name="HideFoldersWithIcon.Content" xml:space="preserve">
-    <value>Hide folders that already have an icon</value>
+    <value>Already Set</value>
+  </data>
+  <data name="HideFoldersWithIcon.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hide folders that already have a working icon.</value>
+  </data>
+  <data name="HideFoldersWithIcon.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Hide Folders That Already Have an Icon</value>
   </data>
   <data name="HideFoldersWithOnlyPictures.Content" xml:space="preserve">
-    <value>Hide folders with only pictures</value>
+    <value>Only Pictures</value>
+  </data>
+  <data name="HideFoldersWithOnlyPictures.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hide folders where every icon found is a picture or an SVG, with no exe, .ico or shortcut icon. A folder whose icon you picked by hand stays.</value>
+  </data>
+  <data name="HideFoldersWithOnlyPictures.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Hide Folders with Only Pictures</value>
   </data>
   <data name="HideFoldersWithoutMatch.Content" xml:space="preserve">
-    <value>Hide folders where no icon was found</value>
+    <value>No Match</value>
+  </data>
+  <data name="HideFoldersWithoutMatch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hide folders where no icon was found.</value>
+  </data>
+  <data name="HideFoldersWithoutMatch.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Hide Folders Where No Icon Was Found</value>
   </data>
   <data name="SelectAllCheckBox.Content" xml:space="preserve">
-    <value>Select all</value>
+    <value>Select All</value>
   </data>
   <data name="SelectAllCheckBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Unticks every folder shown when any is ticked, otherwise ticks them all. Hidden folders keep their tick and are never applied.</value>
@@ -128,10 +149,10 @@
     <value>Looking for game and app folders…</value>
   </data>
   <data name="NoRowsTitle.Text" xml:space="preserve">
-    <value>No subfolders to work on</value>
+    <value>No Subfolders to Work On</value>
   </data>
   <data name="NoRowsMessage.Text" xml:space="preserve">
-    <value>Nothing below this folder is worth searching. Try Deep search, or switch to This folder.</value>
+    <value>Nothing below this folder is worth searching. Try Deep Search, or switch to This Folder.</value>
   </data>
   <data name="SelectRowHint.Text" xml:space="preserve">
     <value>Select a folder to see every icon it can take, or to pick one with Browse.</value>
@@ -152,7 +173,7 @@
     <value>From {0}</value>
   </data>
   <data name="RowShortcutTitle" xml:space="preserve">
-    <value>{0} (shortcut)</value>
+    <value>{0} (Shortcut)</value>
   </data>
   <data name="RowShortcutToolTip" xml:space="preserve">
     <value>A shortcut to {0}: the folder gets the icon, and the shortcut shows it.</value>
@@ -170,7 +191,7 @@
     <value>Failed: {0}</value>
   </data>
   <data name="VersionFolderRowWarning.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>This link will break at the next update: the file sits in a version folder. Set Icon target to Copy in Settings to avoid this.</value>
+    <value>This link will break at the next update: the file sits in a version folder. Set Icon Target to Copy in Settings to avoid this.</value>
   </data>
   <data name="BatchSummary" xml:space="preserve">
     <value>{0} folders · {1} already have an icon</value>
@@ -182,13 +203,13 @@
     <value>Apply ({0})</value>
   </data>
   <data name="RemoveCountButton" xml:space="preserve">
-    <value>Remove icons ({0})</value>
+    <value>Remove Icons ({0})</value>
   </data>
   <data name="RemoveConfirmTitleSingle" xml:space="preserve">
-    <value>Remove 1 icon?</value>
+    <value>Remove 1 Icon?</value>
   </data>
   <data name="RemoveConfirmTitle" xml:space="preserve">
-    <value>Remove {0} icons?</value>
+    <value>Remove {0} Icons?</value>
   </data>
   <data name="RemoveConfirmMessage" xml:space="preserve">
     <value>The ticked folders get the standard folder icon back. Their other settings are kept, and so are icon files the app didn't make.</value>
@@ -219,7 +240,7 @@
 
   <!-- Icon picker -->
   <data name="CandidatesHeader" xml:space="preserve">
-    <value>Icons found ({0})</value>
+    <value>Icons Found ({0})</value>
   </data>
   <data name="ModuleIconsHeader" xml:space="preserve">
     <value>Icons in {0} ({1})</value>
@@ -228,13 +249,13 @@
     <value>Browse…</value>
   </data>
   <data name="BackToCandidatesButton.Content" xml:space="preserve">
-    <value>Back to the folder's icons</value>
+    <value>Back to the Folder's Icons</value>
   </data>
   <data name="ShowAllButton" xml:space="preserve">
-    <value>Show all ({0})</value>
+    <value>Show All ({0})</value>
   </data>
   <data name="NoCandidatesTitle.Text" xml:space="preserve">
-    <value>No icons found</value>
+    <value>No Icons Found</value>
   </data>
   <data name="NoCandidatesMessage.Text" xml:space="preserve">
     <value>Nothing in this folder can give it an icon. Use Browse to pick any icon or picture.</value>
@@ -273,7 +294,7 @@
     <value>{0} → {1}</value>
   </data>
   <data name="IncludeShortcutsCheckBox.Content" xml:space="preserve">
-    <value>Include shortcuts</value>
+    <value>Include Shortcuts</value>
   </data>
   <data name="IncludeShortcutsCheckBox.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Lists the icons shown by shortcuts (.lnk, .url) in the folder, and lets them be predicted. Applies to every folder.</value>
@@ -344,10 +365,10 @@
     <value>the SVG can't be read, or draws nothing</value>
   </data>
   <data name="RetryAsAdminButton" xml:space="preserve">
-    <value>Retry as admin</value>
+    <value>Retry as Admin</value>
   </data>
   <data name="AdminNotGrantedTitle" xml:space="preserve">
-    <value>Admin rights weren't granted</value>
+    <value>Admin Rights Weren't Granted</value>
   </data>
   <data name="AdminNotGrantedMessage" xml:space="preserve">
     <value>Those folders were left as they are.</value>
@@ -358,29 +379,29 @@
     <value>Settings</value>
   </data>
   <data name="IconTargetCard.Header" xml:space="preserve">
-    <value>Icon target</value>
+    <value>Icon Target</value>
   </data>
   <data name="IconTargetCard.Description" xml:space="preserve">
     <value>When the icon comes from an .exe or .ico inside the folder. A copy survives updates that rename or move the file; a link adds no file. Pictures and files from elsewhere are always copied.</value>
   </data>
   <data name="IconTargetCopy.Content" xml:space="preserve">
-    <value>Copy into the folder</value>
+    <value>Copy into the Folder</value>
   </data>
   <data name="IconTargetLink.Content" xml:space="preserve">
-    <value>Link to the file</value>
+    <value>Link to the File</value>
   </data>
 
   <data name="ContextMenuText" xml:space="preserve">
-    <value>Pick folder icon…</value>
+    <value>Pick Folder Icon…</value>
   </data>
   <data name="ContextMenuCard.Header" xml:space="preserve">
-    <value>Right-click entry</value>
+    <value>Right-Click Entry</value>
   </data>
   <data name="ContextMenuDescription" xml:space="preserve">
-    <value>Adds "Pick folder icon…" when right-clicking a folder, the empty space inside one, or a drive. On Windows 11 it sits under "Show more options".</value>
+    <value>Adds "Pick Folder Icon…" when right-clicking a folder, the empty space inside one, or a drive. On Windows 11 it sits under "Show more options".</value>
   </data>
   <data name="DataLocationCard.Header" xml:space="preserve">
-    <value>Keep data with the app (portable)</value>
+    <value>Keep Data with the App (Portable)</value>
   </data>
   <data name="DataLocationAppDataDescription" xml:space="preserve">
     <value>Settings and saved icons are in {0}. Turn on to keep them in a Data folder next to IconPicker.exe instead, to carry the app with its data.</value>
@@ -398,19 +419,19 @@
     <value>Off</value>
   </data>
   <data name="DataLocationToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Keep data with the app</value>
+    <value>Keep Data with the App</value>
   </data>
   <data name="DataMoveConfirmTitle" xml:space="preserve">
-    <value>Move the data and restart?</value>
+    <value>Move the Data and Restart?</value>
   </data>
   <data name="DataMoveConfirmMessage" xml:space="preserve">
     <value>Icon Picker closes, moves its settings and saved icons to {0}, and opens again.</value>
   </data>
   <data name="DataMoveConfirmButton" xml:space="preserve">
-    <value>Move and restart</value>
+    <value>Move and Restart</value>
   </data>
   <data name="DataMoveFailedTitle" xml:space="preserve">
-    <value>Data not moved</value>
+    <value>Data Not Moved</value>
   </data>
   <data name="DataMoveFailedMessage" xml:space="preserve">
     <value>Icon Picker couldn't move its data: {0} It is still in {1}.</value>
@@ -422,7 +443,7 @@
     <value>The entry opens another copy of Icon Picker: {0}</value>
   </data>
   <data name="ContextMenuToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Right-click entry</value>
+    <value>Right-Click Entry</value>
   </data>
   <data name="ContextMenuToggle.OnContent" xml:space="preserve">
     <value>On</value>
@@ -431,7 +452,7 @@
     <value>Off</value>
   </data>
   <data name="PointContextMenuHereButton.Content" xml:space="preserve">
-    <value>Use this copy</value>
+    <value>Use This Copy</value>
   </data>
   <data name="LibrariesExpander.Header" xml:space="preserve">
     <value>Libraries</value>
@@ -440,7 +461,7 @@
     <value>Folders you rescan often, such as a Steam library. Rescan them from Home.</value>
   </data>
   <data name="AddLibraryButton.Content" xml:space="preserve">
-    <value>Add library…</value>
+    <value>Add Library…</value>
   </data>
   <data name="RestartExplorerCard.Header" xml:space="preserve">
     <value>Restart Explorer</value>
@@ -472,7 +493,7 @@
     <value>Libraries</value>
   </data>
   <data name="RescanAllButton.Content" xml:space="preserve">
-    <value>Rescan all</value>
+    <value>Rescan All</value>
   </data>
   <data name="RescanLibraryButton.Content" xml:space="preserve">
     <value>Rescan</value>
@@ -504,7 +525,7 @@
     <value>OK</value>
   </data>
   <data name="DiscardChangesTitle" xml:space="preserve">
-    <value>Discard the icons you picked?</value>
+    <value>Discard the Icons You Picked?</value>
   </data>
   <data name="DiscardChangesMessage" xml:space="preserve">
     <value>They haven't been applied yet.</value>
@@ -516,13 +537,13 @@
     <value>The icons picked in {0} haven't been applied yet, and opening another folder replaces it.</value>
   </data>
   <data name="FolderMissingTitle" xml:space="preserve">
-    <value>Folder not found</value>
+    <value>Folder Not Found</value>
   </data>
   <data name="FolderMissingMessage" xml:space="preserve">
     <value>{0} doesn't exist or can't be opened.</value>
   </data>
   <data name="ErrorTitle" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Something Went Wrong</value>
   </data>
   <data name="ErrorMessage" xml:space="preserve">
     <value>{0}
@@ -530,13 +551,13 @@
 Details were saved to {1}.</value>
   </data>
   <data name="NavigationMyIcons.Content" xml:space="preserve">
-    <value>My icons</value>
+    <value>My Icons</value>
   </data>
   <data name="MyIconsTitle.Text" xml:space="preserve">
-    <value>My icons</value>
+    <value>My Icons</value>
   </data>
   <data name="NewIconButton.Content" xml:space="preserve">
-    <value>New icon</value>
+    <value>New Icon</value>
   </data>
   <data name="EditIconButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Edit</value>
@@ -563,31 +584,31 @@ Details were saved to {1}.</value>
     <value>Delete</value>
   </data>
   <data name="MyIconsEmptyTitle.Text" xml:space="preserve">
-    <value>No icons yet</value>
+    <value>No Icons Yet</value>
   </data>
   <data name="MyIconsEmptyMessage.Text" xml:space="preserve">
     <value>Build an icon from Microsoft's Fluent icons or any SVG: give it a color, set it on a background, and use it for any folder.</value>
   </data>
   <data name="MyIconsEmptyButton.Content" xml:space="preserve">
-    <value>Browse built-in icons</value>
+    <value>Browse Built-In Icons</value>
   </data>
   <data name="SaveIconButton.Content" xml:space="preserve">
-    <value>Save to My icons</value>
+    <value>Save to My Icons</value>
   </data>
   <data name="DiscardIconChangesTitle" xml:space="preserve">
-    <value>Discard your changes to this icon?</value>
+    <value>Discard Your Changes to This Icon?</value>
   </data>
   <data name="DiscardIconChangesMessage" xml:space="preserve">
-    <value>They haven't been saved to My icons.</value>
+    <value>They haven't been saved to My Icons.</value>
   </data>
   <data name="DuplicateIconName" xml:space="preserve">
     <value>{0} (copy)</value>
   </data>
   <data name="RenameIconTitle" xml:space="preserve">
-    <value>Rename icon</value>
+    <value>Rename Icon</value>
   </data>
   <data name="RenameIconLabel" xml:space="preserve">
-    <value>New name</value>
+    <value>New Name</value>
   </data>
   <data name="RenameIconConfirm" xml:space="preserve">
     <value>Rename</value>
@@ -614,7 +635,7 @@ Details were saved to {1}.</value>
     <value>From {0}</value>
   </data>
   <data name="BuilderBuiltInButton.Content" xml:space="preserve">
-    <value>Built-in icons…</value>
+    <value>Built-In Icons…</value>
   </data>
   <data name="BuilderBrowseButton.Content" xml:space="preserve">
     <value>Browse…</value>
@@ -623,7 +644,7 @@ Details were saved to {1}.</value>
     <value>This SVG has several colors, which are kept.</value>
   </data>
   <data name="BuilderRecolorToggle.Header" xml:space="preserve">
-    <value>Icon color</value>
+    <value>Icon Color</value>
   </data>
   <data name="BuilderRecolorToggle.OffContent" xml:space="preserve">
     <value>Original</value>
@@ -632,19 +653,19 @@ Details were saved to {1}.</value>
     <value>Custom</value>
   </data>
   <data name="BuilderIconColorButton.Label" xml:space="preserve">
-    <value>Icon color</value>
+    <value>Icon Color</value>
   </data>
   <data name="BuilderBackgroundTitle.Text" xml:space="preserve">
     <value>Background</value>
   </data>
   <data name="BuilderShapeChoice.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Background shape</value>
+    <value>Background Shape</value>
   </data>
   <data name="BuilderShapeNone.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>No background</value>
+    <value>No Background</value>
   </data>
   <data name="BuilderShapeNone.ToolTipService.ToolTip" xml:space="preserve">
-    <value>No background</value>
+    <value>No Background</value>
   </data>
   <data name="BuilderShapeSquare.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Square</value>
@@ -653,10 +674,10 @@ Details were saved to {1}.</value>
     <value>Square</value>
   </data>
   <data name="BuilderShapeRounded.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Rounded square</value>
+    <value>Rounded Square</value>
   </data>
   <data name="BuilderShapeRounded.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Rounded square</value>
+    <value>Rounded Square</value>
   </data>
   <data name="BuilderShapeCircle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Circle</value>
@@ -665,16 +686,16 @@ Details were saved to {1}.</value>
     <value>Circle</value>
   </data>
   <data name="BuilderShapeFolder.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Windows folder</value>
+    <value>Windows Folder</value>
   </data>
   <data name="BuilderShapeFolder.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Windows folder</value>
+    <value>Windows Folder</value>
   </data>
   <data name="BuilderBackgroundColorButton.Label" xml:space="preserve">
-    <value>Background color</value>
+    <value>Background Color</value>
   </data>
   <data name="BuilderSizeSlider.Header" xml:space="preserve">
-    <value>Icon size</value>
+    <value>Icon Size</value>
   </data>
   <data name="BuilderNameBox.Header" xml:space="preserve">
     <value>Name</value>
@@ -683,10 +704,10 @@ Details were saved to {1}.</value>
     <value>Back</value>
   </data>
   <data name="BuilderSaveToMyIcons" xml:space="preserve">
-    <value>Save to My icons</value>
+    <value>Save to My Icons</value>
   </data>
   <data name="BuilderSaveChangesToMyIcons" xml:space="preserve">
-    <value>Save the changes to My icons</value>
+    <value>Save the Changes to My Icons</value>
   </data>
   <data name="BuilderUnreadableSource" xml:space="preserve">
     <value>This icon's source can no longer be read.</value>
@@ -707,10 +728,10 @@ Details were saved to {1}.</value>
     <value>Recent</value>
   </data>
   <data name="IconSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Search icons</value>
+    <value>Search Icons</value>
   </data>
   <data name="IconSearchBox.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Search icons</value>
+    <value>Search Icons</value>
   </data>
   <data name="FilledToggle.OffContent" xml:space="preserve">
     <value>Regular</value>
@@ -719,13 +740,13 @@ Details were saved to {1}.</value>
     <value>Filled</value>
   </data>
   <data name="FilledToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Filled icons</value>
+    <value>Filled Icons</value>
   </data>
   <data name="IconListMyIconsTitle.Text" xml:space="preserve">
-    <value>My icons</value>
+    <value>My Icons</value>
   </data>
   <data name="IconListBuiltInTitle.Text" xml:space="preserve">
-    <value>Built-in icons</value>
+    <value>Built-In Icons</value>
   </data>
   <data name="IconListNoMatch.Text" xml:space="preserve">
     <value>No built-in icon matches.</value>
@@ -752,7 +773,7 @@ Details were saved to {1}.</value>
     <value>MINE</value>
   </data>
   <data name="SavedIconToolTip" xml:space="preserve">
-    <value>{0}, from My icons</value>
+    <value>{0}, from My Icons</value>
   </data>
   <data name="BuiltIconToolTip" xml:space="preserve">
     <value>{0}, built for this folder</value>
@@ -761,10 +782,10 @@ Details were saved to {1}.</value>
     <value>Icons</value>
   </data>
   <data name="IconBuilderDialogTitle" xml:space="preserve">
-    <value>Build an icon</value>
+    <value>Build an Icon</value>
   </data>
   <data name="UseForFolderButton" xml:space="preserve">
-    <value>Use for this folder</value>
+    <value>Use for This Folder</value>
   </data>
   <data name="IconBuilderDialog.CloseButtonText" xml:space="preserve">
     <value>Cancel</value>
