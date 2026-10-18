@@ -10,18 +10,71 @@
     <SolidColorBrush x:Key="DarkBackdropBrush" Color="#202020" />
   </UserControl.Resources>
 
-  <Grid ColumnSpacing="24">
+  <!-- Side by side when there is room (the preview's 208 px, the gap and the settings' 300 px); below that, a smaller preview sits above the settings (see the code-behind). -->
+  <Grid x:Name="RootGrid" ColumnSpacing="24" RowSpacing="16">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" />
-      <ColumnDefinition Width="*" MinWidth="300" />
+      <ColumnDefinition x:Name="PreviewColumn" Width="Auto" />
+      <ColumnDefinition x:Name="SettingsColumn" Width="*" MinWidth="300" />
     </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <VisualStateManager.VisualStateGroups>
+      <VisualStateGroup>
+        <VisualState x:Name="SideBySide" />
+        <VisualState x:Name="Stacked">
+          <VisualState.Setters>
+            <Setter Target="RootGrid.ColumnSpacing" Value="0" />
+            <Setter Target="PreviewColumn.Width" Value="*" />
+            <Setter Target="SettingsColumn.Width" Value="0" />
+            <Setter Target="SettingsColumn.MinWidth" Value="0" />
+            <Setter Target="PreviewGrid.(Grid.RowSpan)" Value="1" />
+            <Setter Target="PreviewGrid.HorizontalAlignment" Value="Left" />
+            <Setter Target="PreviewGrid.ColumnSpacing" Value="12" />
+            <Setter Target="SettingsPane.(Grid.Row)" Value="1" />
+            <Setter Target="SettingsPane.(Grid.RowSpan)" Value="1" />
+            <Setter Target="SettingsPane.(Grid.Column)" Value="0" />
+            <Setter Target="BuiltInIconsPane.(Grid.Row)" Value="1" />
+            <Setter Target="BuiltInIconsPane.(Grid.RowSpan)" Value="1" />
+            <Setter Target="BuiltInIconsPane.(Grid.Column)" Value="0" />
+            <Setter Target="ModuleIconsPane.(Grid.Row)" Value="1" />
+            <Setter Target="ModuleIconsPane.(Grid.RowSpan)" Value="1" />
+            <Setter Target="ModuleIconsPane.(Grid.Column)" Value="0" />
+            <!-- The large preview shrinks, with the light and dark strips beside it. -->
+            <Setter Target="LargePreviewBorder.Width" Value="128" />
+            <Setter Target="LargePreviewBorder.Height" Value="128" />
+            <Setter Target="LargePreviewBorder.(Grid.RowSpan)" Value="2" />
+            <Setter Target="LargePreviewImage.Width" Value="112" />
+            <Setter Target="LargePreviewImage.Height" Value="112" />
+            <Setter Target="EmptyPreviewText.MaxWidth" Value="104" />
+            <Setter Target="LightStrip.Width" Value="NaN" />
+            <Setter Target="LightStrip.(Grid.Row)" Value="0" />
+            <Setter Target="LightStrip.(Grid.Column)" Value="1" />
+            <Setter Target="DarkStrip.Width" Value="NaN" />
+            <Setter Target="DarkStrip.(Grid.Row)" Value="1" />
+            <Setter Target="DarkStrip.(Grid.Column)" Value="1" />
+          </VisualState.Setters>
+        </VisualState>
+      </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
 
     <!-- Preview: 256 px, then 48, 32 and 16 px on light and dark backdrops. -->
-    <StackPanel Spacing="12">
-      <Border Width="208" Height="208" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
+    <Grid x:Name="PreviewGrid" Grid.RowSpan="2" ColumnSpacing="0" RowSpacing="12" VerticalAlignment="Top">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Border x:Name="LargePreviewBorder" Width="208" Height="208" VerticalAlignment="Top" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
         <Grid>
-          <Image Width="192" Height="192" Source="{x:Bind ViewModel.LargePreview, Mode=OneWay}" Stretch="Uniform" />
+          <Image x:Name="LargePreviewImage" Width="192" Height="192" Source="{x:Bind ViewModel.LargePreview, Mode=OneWay}" Stretch="Uniform" />
           <TextBlock
+              x:Name="EmptyPreviewText"
               x:Uid="BuilderEmptyPreview"
               MaxWidth="160"
               HorizontalAlignment="Center"
@@ -32,24 +85,24 @@
               Visibility="{x:Bind ViewModel.HasNoPreview, Mode=OneWay}" />
         </Grid>
       </Border>
-      <Border Width="208" Padding="12" Background="{StaticResource LightBackdropBrush}" CornerRadius="8">
+      <Border x:Name="LightStrip" Grid.Row="1" Width="208" Padding="12" Background="{StaticResource LightBackdropBrush}" CornerRadius="8">
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="16">
           <Image Width="48" Height="48" VerticalAlignment="Center" Source="{x:Bind ViewModel.Preview48, Mode=OneWay}" />
           <Image Width="32" Height="32" VerticalAlignment="Center" Source="{x:Bind ViewModel.Preview32, Mode=OneWay}" />
           <Image Width="16" Height="16" VerticalAlignment="Center" Source="{x:Bind ViewModel.Preview16, Mode=OneWay}" />
         </StackPanel>
       </Border>
-      <Border Width="208" Padding="12" Background="{StaticResource DarkBackdropBrush}" CornerRadius="8">
+      <Border x:Name="DarkStrip" Grid.Row="2" Width="208" Padding="12" Background="{StaticResource DarkBackdropBrush}" CornerRadius="8">
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="16">
           <Image Width="48" Height="48" VerticalAlignment="Center" Source="{x:Bind ViewModel.Preview48, Mode=OneWay}" />
           <Image Width="32" Height="32" VerticalAlignment="Center" Source="{x:Bind ViewModel.Preview32, Mode=OneWay}" />
           <Image Width="16" Height="16" VerticalAlignment="Center" Source="{x:Bind ViewModel.Preview16, Mode=OneWay}" />
         </StackPanel>
       </Border>
-    </StackPanel>
+    </Grid>
 
     <!-- Settings. -->
-    <ScrollViewer Grid.Column="1" Visibility="{x:Bind ViewModel.IsSettingsPane, Mode=OneWay}">
+    <ScrollViewer x:Name="SettingsPane" Grid.RowSpan="2" Grid.Column="1" Visibility="{x:Bind ViewModel.IsSettingsPane, Mode=OneWay}">
       <StackPanel Padding="0,0,12,0" Spacing="12">
         <InfoBar Severity="Warning" IsClosable="False" IsOpen="{x:Bind ViewModel.HasProblem, Mode=OneWay}" Message="{x:Bind ViewModel.ProblemText, Mode=OneWay}" />
 
@@ -77,13 +130,35 @@
         </StackPanel>
 
         <TextBlock x:Uid="BuilderBackgroundTitle" Margin="0,8,0,0" Style="{StaticResource BodyStrongTextBlockStyle}" />
-        <RadioButtons x:Uid="BuilderShapeChoice" MaxColumns="5" SelectedIndex="{x:Bind ViewModel.ShapeIndex, Mode=TwoWay}">
-          <RadioButton x:Uid="BuilderShapeNone" />
-          <RadioButton x:Uid="BuilderShapeSquare" />
-          <RadioButton x:Uid="BuilderShapeRounded" />
-          <RadioButton x:Uid="BuilderShapeCircle" />
-          <RadioButton x:Uid="BuilderShapeFolder" />
-        </RadioButtons>
+        <!-- One tile per shape, drawn as it looks, in IconShape's order; the name shows on hover and to screen readers. -->
+        <GridView x:Uid="BuilderShapeChoice" SelectedIndex="{x:Bind ViewModel.ShapeIndex, Mode=TwoWay}" SelectionMode="Single">
+          <GridViewItem x:Uid="BuilderShapeNone">
+            <Grid Width="40" Height="40">
+              <Rectangle Width="26" Height="26" RadiusX="4" RadiusY="4" Stroke="{ThemeResource TextFillColorSecondaryBrush}" StrokeDashArray="2,2" StrokeThickness="1.5" />
+            </Grid>
+          </GridViewItem>
+          <GridViewItem x:Uid="BuilderShapeSquare">
+            <Grid Width="40" Height="40">
+              <Rectangle Width="26" Height="26" Fill="{ThemeResource TextFillColorSecondaryBrush}" />
+            </Grid>
+          </GridViewItem>
+          <GridViewItem x:Uid="BuilderShapeRounded">
+            <Grid Width="40" Height="40">
+              <Rectangle Width="26" Height="26" Fill="{ThemeResource TextFillColorSecondaryBrush}" RadiusX="6" RadiusY="6" />
+            </Grid>
+          </GridViewItem>
+          <GridViewItem x:Uid="BuilderShapeCircle">
+            <Grid Width="40" Height="40">
+              <Ellipse Width="26" Height="26" Fill="{ThemeResource TextFillColorSecondaryBrush}" />
+            </Grid>
+          </GridViewItem>
+          <GridViewItem x:Uid="BuilderShapeFolder">
+            <Grid Width="40" Height="40">
+              <!-- A folder: its tab, then its body. -->
+              <Path Width="26" Height="22" Data="M 0,2 C 0,0.9 0.9,0 2,0 L 9,0 L 12,3 L 24,3 C 25.1,3 26,3.9 26,5 L 26,20 C 26,21.1 25.1,22 24,22 L 2,22 C 0.9,22 0,21.1 0,20 Z" Fill="{ThemeResource TextFillColorSecondaryBrush}" Stretch="Uniform" />
+            </Grid>
+          </GridViewItem>
+        </GridView>
         <controls:ColorPickerButton
             x:Uid="BuilderBackgroundColorButton"
             HorizontalAlignment="Left"
@@ -105,7 +180,7 @@
     </ScrollViewer>
 
     <!-- The built-in icons, in place of the settings. -->
-    <Grid Grid.Column="1" RowSpacing="8" Visibility="{x:Bind ViewModel.IsBuiltInIconsPane, Mode=OneWay}">
+    <Grid x:Name="BuiltInIconsPane" Grid.RowSpan="2" Grid.Column="1" RowSpacing="8" Visibility="{x:Bind ViewModel.IsBuiltInIconsPane, Mode=OneWay}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
@@ -115,7 +190,7 @@
     </Grid>
 
     <!-- The icons of a browsed .exe or .dll holding several. -->
-    <Grid Grid.Column="1" RowSpacing="8" Visibility="{x:Bind ViewModel.IsModuleIconsPane, Mode=OneWay}">
+    <Grid x:Name="ModuleIconsPane" Grid.RowSpan="2" Grid.Column="1" RowSpacing="8" Visibility="{x:Bind ViewModel.IsModuleIconsPane, Mode=OneWay}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />

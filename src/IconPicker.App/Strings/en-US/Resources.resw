@@ -637,20 +637,35 @@ Details were saved to {1}.</value>
   <data name="BuilderShapeChoice.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Background shape</value>
   </data>
-  <data name="BuilderShapeNone.Content" xml:space="preserve">
-    <value>None</value>
+  <data name="BuilderShapeNone.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>No background</value>
   </data>
-  <data name="BuilderShapeSquare.Content" xml:space="preserve">
+  <data name="BuilderShapeNone.ToolTipService.ToolTip" xml:space="preserve">
+    <value>No background</value>
+  </data>
+  <data name="BuilderShapeSquare.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Square</value>
   </data>
-  <data name="BuilderShapeRounded.Content" xml:space="preserve">
-    <value>Rounded</value>
+  <data name="BuilderShapeSquare.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Square</value>
   </data>
-  <data name="BuilderShapeCircle.Content" xml:space="preserve">
+  <data name="BuilderShapeRounded.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rounded square</value>
+  </data>
+  <data name="BuilderShapeRounded.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rounded square</value>
+  </data>
+  <data name="BuilderShapeCircle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Circle</value>
   </data>
-  <data name="BuilderShapeFolder.Content" xml:space="preserve">
-    <value>Folder</value>
+  <data name="BuilderShapeCircle.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Circle</value>
+  </data>
+  <data name="BuilderShapeFolder.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows folder</value>
+  </data>
+  <data name="BuilderShapeFolder.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows folder</value>
   </data>
   <data name="BuilderBackgroundColorButton.Label" xml:space="preserve">
     <value>Background color</value>

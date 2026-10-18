@@ -4,67 +4,65 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:IconPicker.App.Controls">
-  <!-- The list and the builder need about 900 px; a narrower window scrolls sideways rather than cutting the builder off. -->
-  <ScrollViewer HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Auto" VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled">
-    <Grid MinWidth="900" Padding="32,24,32,24" ColumnSpacing="32" RowSpacing="16">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="300" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
+  <!-- The builder stacks its preview above its settings when narrow, so the page fits the window's minimum width without scrolling sideways. -->
+  <Grid Padding="32,24,32,24" ColumnSpacing="32" RowSpacing="16">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="300" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <TextBlock x:Uid="MyIconsTitle" Grid.ColumnSpan="2" Style="{StaticResource TitleTextBlockStyle}" />
+
+    <!-- Saved icons. -->
+    <Grid Grid.Row="1" RowSpacing="8">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
-
-      <TextBlock x:Uid="MyIconsTitle" Grid.ColumnSpan="2" Style="{StaticResource TitleTextBlockStyle}" />
-
-      <!-- Saved icons. -->
-      <Grid Grid.Row="1" RowSpacing="8">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Spacing="4">
-          <Button x:Uid="NewIconButton" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.NewIconCommand}" />
-          <Button x:Uid="EditIconButton" Command="{x:Bind ViewModel.EditCommand}">
-            <FontIcon Glyph="&#xE70F;" FontSize="16" />
-          </Button>
-          <Button x:Uid="DuplicateIconButton" Command="{x:Bind ViewModel.DuplicateCommand}">
-            <FontIcon Glyph="&#xE8C8;" FontSize="16" />
-          </Button>
-          <Button x:Uid="RenameIconButton" Command="{x:Bind ViewModel.RenameCommand}">
-            <FontIcon Glyph="&#xE8AC;" FontSize="16" />
-          </Button>
-          <Button x:Uid="DeleteIconButton" Command="{x:Bind ViewModel.DeleteCommand}">
-            <FontIcon Glyph="&#xE74D;" FontSize="16" />
-          </Button>
-        </StackPanel>
-        <GridView
-            x:Name="SavedIconGrid"
-            Grid.Row="1"
-            IsDoubleTapEnabled="True"
-            ItemTemplate="{StaticResource SavedIconTileTemplate}"
-            ItemsSource="{x:Bind ViewModel.SavedIcons}"
-            SelectedItem="{x:Bind ViewModel.SelectedIcon, Mode=OneWay}"
-            SelectionMode="Single"
-            SelectionChanged="OnSavedIconSelectionChanged"
-            DoubleTapped="OnSavedIconDoubleTapped" />
-        <StackPanel Grid.Row="1" Margin="0,24,0,0" Spacing="12" Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}">
-          <TextBlock x:Uid="MyIconsEmptyTitle" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-          <TextBlock x:Uid="MyIconsEmptyMessage" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-          <Button x:Uid="MyIconsEmptyButton" Command="{x:Bind ViewModel.StartFromBuiltInIconsCommand}" />
-        </StackPanel>
-      </Grid>
-
-      <!-- The builder. -->
-      <Grid Grid.Row="1" Grid.Column="1" RowSpacing="16">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="*" />
-          <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <controls:IconBuilderControl ViewModel="{x:Bind ViewModel.Builder}" />
-        <Button x:Uid="SaveIconButton" Grid.Row="1" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveCommand}" IsEnabled="{x:Bind ViewModel.Builder.HasSource, Mode=OneWay}" />
-      </Grid>
+      <StackPanel Orientation="Horizontal" Spacing="4">
+        <Button x:Uid="NewIconButton" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.NewIconCommand}" />
+        <Button x:Uid="EditIconButton" Command="{x:Bind ViewModel.EditCommand}">
+          <FontIcon Glyph="&#xE70F;" FontSize="16" />
+        </Button>
+        <Button x:Uid="DuplicateIconButton" Command="{x:Bind ViewModel.DuplicateCommand}">
+          <FontIcon Glyph="&#xE8C8;" FontSize="16" />
+        </Button>
+        <Button x:Uid="RenameIconButton" Command="{x:Bind ViewModel.RenameCommand}">
+          <FontIcon Glyph="&#xE8AC;" FontSize="16" />
+        </Button>
+        <Button x:Uid="DeleteIconButton" Command="{x:Bind ViewModel.DeleteCommand}">
+          <FontIcon Glyph="&#xE74D;" FontSize="16" />
+        </Button>
+      </StackPanel>
+      <GridView
+          x:Name="SavedIconGrid"
+          Grid.Row="1"
+          IsDoubleTapEnabled="True"
+          ItemTemplate="{StaticResource SavedIconTileTemplate}"
+          ItemsSource="{x:Bind ViewModel.SavedIcons}"
+          SelectedItem="{x:Bind ViewModel.SelectedIcon, Mode=OneWay}"
+          SelectionMode="Single"
+          SelectionChanged="OnSavedIconSelectionChanged"
+          DoubleTapped="OnSavedIconDoubleTapped" />
+      <StackPanel Grid.Row="1" Margin="0,24,0,0" Spacing="12" Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}">
+        <TextBlock x:Uid="MyIconsEmptyTitle" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+        <TextBlock x:Uid="MyIconsEmptyMessage" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+        <Button x:Uid="MyIconsEmptyButton" Command="{x:Bind ViewModel.StartFromBuiltInIconsCommand}" />
+      </StackPanel>
     </Grid>
-  </ScrollViewer>
+
+    <!-- The builder. -->
+    <Grid Grid.Row="1" Grid.Column="1" RowSpacing="16">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <controls:IconBuilderControl ViewModel="{x:Bind ViewModel.Builder}" />
+      <Button x:Uid="SaveIconButton" Grid.Row="1" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveCommand}" IsEnabled="{x:Bind ViewModel.Builder.HasSource, Mode=OneWay}" />
+    </Grid>
+  </Grid>
 </Page>

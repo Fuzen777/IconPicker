@@ -56,9 +56,9 @@
 ## My Icons
 
 - **My icons tab**: icons built in the app and kept for any folder, most recently used first. New icon starts the builder afresh; a selected icon offers Edit (also on double-click), Duplicate, Rename and Delete (asked first; folders already using it keep their icon). With no icons yet, the tab offers to start from the built-in icons.
-- **Builder**: a glyph from the built-in icons, an SVG, a picture, an .ico or an .exe or .dll icon (one holding several shows them to pick from), with a live preview at 256 px and at 48, 32 and 16 px on light and dark backdrops.
+- **Builder**: a glyph from the built-in icons, an SVG, a picture, an .ico or an .exe or .dll icon (one holding several shows them to pick from), with a live preview at 256 px and at 48, 32 and 16 px on light and dark backdrops. When the window is narrow, a smaller preview sits above the settings, so the tab never scrolls sideways.
   - **Icon color**: an SVG drawn in one color takes any color; one in several colors keeps them, and the builder says so. Templates that draw nothing until colored come back once colored.
-  - **Background**: none, square, rounded square, circle, or Windows' own folder with the glyph on its front. Square, rounded square and circle take a background color.
+  - **Background**: none, square, rounded square, circle, or Windows' own folder with the glyph on its front, picked from tiles drawing each shape (named on hover and to screen readers). Square, rounded square and circle take a background color.
   - **Icon size**: how much of the background the glyph fills, from 40 to 100%, with a natural size for each shape until the slider is moved.
   - **Colors**: preset swatches, the last 8 colors used on a saved or applied icon, and Windows' color picker.
   - **Name**: the source's name until another is typed.
