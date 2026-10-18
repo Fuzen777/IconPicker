@@ -1,5 +1,8 @@
 # Code Signing
 
+> [!note]
+> The release workflow and `Scripts\Package.cmd` are built, without the signing step (October 2026). Signing itself, `CODE-SIGNING.md` and the SignPath set-up remain.
+
 > [!abstract]
 > Sign Icon Picker's releases for free through the SignPath Foundation, so Windows stops warning people who download it ("Windows protected your PC", "Unknown publisher"). Releases are then built by GitHub Actions from the public repository, sent to SignPath for signing, approved by hand, and published with the signed files. The first release ships unsigned; this spec covers what comes after.
 

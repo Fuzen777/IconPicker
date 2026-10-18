@@ -1,0 +1,61 @@
+# Builds Icon Picker on GitHub's Windows machines and publishes it.
+# - Pushing a version tag (v0.2.0, matching <Version> in IconPicker.App.csproj) builds, tests and publishes a GitHub release with the zip.
+# - Running it by hand (Actions > Release > Run workflow) does the same without publishing: the zip is kept with the run, to check a build.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Read the version
+        id: version
+        shell: pwsh
+        run: |
+          $version = dotnet msbuild src/IconPicker.App/IconPicker.App.csproj -getProperty:Version
+          "version=$version" >> $env:GITHUB_OUTPUT
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") {
+            throw "The tag $env:GITHUB_REF_NAME doesn't match the version $version in IconPicker.App.csproj."
+          }
+
+      - name: Build, test and check formatting
+        shell: cmd
+        run: Scripts\Check.cmd
+
+      - name: Make the zip
+        shell: cmd
+        run: Scripts\Package.cmd
+
+      - name: Keep the zip with the run
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: IconPicker-${{ steps.version.outputs.version }}-win-x64
+          path: artifacts/release/IconPicker-*-win-x64.zip*
+          if-no-files-found: error
+
+      - name: Publish the release
+        if: github.event_name == 'push'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          $zip = "artifacts/release/IconPicker-$env:VERSION-win-x64.zip"
+          $arguments = @($env:GITHUB_REF_NAME, $zip, "$zip.sha256", '--title', "Icon Picker $env:VERSION", '--notes-file', '.github/release-notes.md', '--generate-notes')
+          # 0.x versions are marked as pre-releases.
+          if ($env:VERSION.StartsWith('0.')) { $arguments += '--prerelease' }
+          gh release create @arguments

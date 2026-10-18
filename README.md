@@ -20,11 +20,11 @@ The full list is in [FEATURES.md](FEATURES.md).
 ## Download
 
 1. Download the latest `IconPicker-<version>-win-x64.zip` from [Releases](https://github.com/Fuzen777/IconPicker/releases).
-2. Extract it anywhere and run `IconPicker.exe`.
+2. Extract it anywhere and run `IconPicker.exe` in the `Icon Picker` folder it holds.
 
 The app isn't code-signed yet, so Windows SmartScreen may say "Windows protected your PC" the first time: choose **More info**, then **Run anyway**. You can also right-click the zip, choose **Properties** and tick **Unblock** before extracting it.
 
-To update, extract the new zip over the old folder. To remove the app, turn off the right-click entry in Settings if you turned it on, then delete the folder (and `%LocalAppData%\Icon Picker`, unless you kept the data next to the app).
+To update, extract the new zip to the same place, over the old `Icon Picker` folder. To remove the app, turn off the right-click entry in Settings if you turned it on, then delete the folder (and `%LocalAppData%\Icon Picker`, unless you kept the data next to the app).
 
 ### Requirements
 
@@ -40,6 +40,7 @@ You need Windows and the [.NET 10 SDK](https://dotnet.microsoft.com/download).
 | `Scripts\Run.cmd [folder]` | Builds and starts the app, optionally on a folder |
 | `Scripts\Check.cmd` | Builds with warnings as errors, runs the tests and checks formatting |
 | `Scripts\Install.cmd` | Publishes a release build to `%LocalAppData%\Programs\Icon Picker` with a Start menu shortcut |
+| `Scripts\Package.cmd` | Makes the release zip and its SHA-256 in `artifacts\release` |
 
 Build output goes to `artifacts\` in the repository. To build somewhere else, create a `Directory.Build.user.props` next to `Directory.Build.props` (it's ignored by git) that sets `IconPickerBuildRoot`.
 

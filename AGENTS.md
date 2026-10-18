@@ -33,12 +33,14 @@ title: AGENTS
 | `Scripts\Check.cmd` | Builds with warnings as errors, runs the tests and checks formatting. Run it before every commit. |
 | `Scripts\Run.cmd [folder]` | Builds and starts the app, optionally on a folder |
 | `Scripts\Install.cmd` | Publishes Release, self-contained, to `%LocalAppData%\Programs\Icon Picker` and adds a Start menu shortcut |
+| `Scripts\Package.cmd` | Makes the release zip, `IconPicker-<version>-win-x64.zip` holding an `Icon Picker` folder, and its `.sha256`, in the build root's `release` folder; needs PowerShell 7 |
 | `Scripts\Uninstall.cmd` | Removes the right-click entry, the shortcut and the install folder, first moving a portable `Data` folder back to `%LocalAppData%` |
 | `tests\Make-TestLibrary.ps1` | Builds a throwaway game library in `%TEMP%\IconPicker\test-library` (or `-Path`) covering each case the app handles, for trying it by hand |
 | `Scripts\Build-FluentIconLibrary.ps1` | Rebuilds the built-in icons asset (`src\IconPicker.App\Assets\FluentIcons.zip` and its license) from Microsoft's Fluent UI System Icons; downloads the npm package and the repository's metadata files |
 
 - Build output goes to `artifacts\` unless `IconPickerBuildRoot` is set. On this PC the git-ignored `Directory.Build.user.props` sets it to `D:\Dev\icon-picker`, since the project sits in Google Drive, which would sync the output and lock files mid-build.
 - Package versions are central in `Directory.Packages.props`.
+- Releases: set `<Version>` in `IconPicker.App.csproj`, commit, then push a matching tag (`git tag v0.2.0`, `git push origin v0.2.0`). `.github/workflows/release.yml` then runs Check, makes the zip and publishes the GitHub release (a pre-release for 0.x) with `.github/release-notes.md` above the generated notes. Running the workflow by hand builds the zip without publishing. Code signing comes later: [Code Signing](DOCUMENTATION/Specs/Code%20Signing.md).
 - SVGs are drawn with Svg.Skia and SkiaSharp, referenced by Core. `Directory.Build.targets` keeps the native packages' `.pdb` files (about 120 MB) out of every build and publish, and the tests project sets the win-x64 `RuntimeIdentifier` so only those natives are copied. SkiaSharp 4 marks the paint-only `DrawImage`/`DrawBitmap` overloads obsolete, which fails the build: use the `SKSamplingOptions` ones.
 - The project is its own git repository, public at https://github.com/Fuzen777/IconPicker; the Coding monorepo it sits in ignores this folder. Commits use the GitHub noreply address set in this repository's git config, so no personal email is published. `README.md` and the other files GitHub shows stay standard GFM, without Obsidian admonitions.
 
