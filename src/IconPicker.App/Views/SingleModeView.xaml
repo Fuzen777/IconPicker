@@ -14,9 +14,10 @@
     </MenuFlyout>
   </UserControl.Resources>
 
-  <Grid ColumnSpacing="24" RowSpacing="12">
+  <Grid x:Name="ViewGrid" ColumnSpacing="4" RowSpacing="12" SizeChanged="OnViewSizeChanged">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="340" />
+      <ColumnDefinition x:Name="SideColumn" Width="340" />
+      <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
@@ -24,7 +25,7 @@
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <controls:StatusBar Grid.ColumnSpan="2" Status="{x:Bind ViewModel.Status}" />
+    <controls:StatusBar Grid.ColumnSpan="3" Status="{x:Bind ViewModel.Status}" />
 
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
       <StackPanel Spacing="12" Padding="0,0,12,0">
@@ -75,6 +76,8 @@
       </StackPanel>
     </ScrollViewer>
 
-    <controls:IconPickerControl Grid.Row="1" Grid.Column="1" ViewModel="{x:Bind ViewModel.Picker}" />
+    <controls:ColumnSizer x:Name="SideSizer" x:Uid="SingleModeSideSizer" Grid.Row="1" Grid.Column="1" ResizeCompleted="OnSideResized" />
+
+    <controls:IconPickerControl Grid.Row="1" Grid.Column="2" ViewModel="{x:Bind ViewModel.Picker}" />
   </Grid>
 </UserControl>

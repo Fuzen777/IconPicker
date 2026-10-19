@@ -586,6 +586,9 @@ Details were saved to {1}.</value>
   <data name="PickerPanelSizer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Resize the Icon Picker</value>
   </data>
+  <data name="SingleModeSideSizer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Resize the Recent Icons</value>
+  </data>
   <data name="NewIconButton.Content" xml:space="preserve">
     <value>New Icon</value>
   </data>

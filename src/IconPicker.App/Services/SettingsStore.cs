@@ -24,6 +24,9 @@ internal sealed class AppSettings
     /// <summary>Three icon tiles to a row in the picker beside the rows of "Batch" (see BatchModeView's steps).</summary>
     public const double DefaultPickerPanelWidth = 440;
 
+    /// <summary>Five recent icons to a row in the column beside the picker of "Single", its narrowest (see SingleModeView's steps).</summary>
+    public const double DefaultSingleModeColumnWidth = 340;
+
     public AppTheme Theme { get; set; } = AppTheme.System;
 
     public IconTarget IconTarget { get; set; } = IconTarget.Copy;
@@ -38,6 +41,9 @@ internal sealed class AppSettings
 
     /// <summary>The width of the picker beside the rows of "Batch", in effective pixels.</summary>
     public double PickerPanelWidth { get; set; } = DefaultPickerPanelWidth;
+
+    /// <summary>The width of the column beside the picker of "Single" (the current, new and recent icons), in effective pixels.</summary>
+    public double SingleModeColumnWidth { get; set; } = DefaultSingleModeColumnWidth;
 
     /// <summary>The app folder that was given the app's icon (see AppFolderIcon), so it happens once per location.</summary>
     public string? AppFolderIconPath { get; set; }
