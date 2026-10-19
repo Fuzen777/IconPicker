@@ -571,6 +571,9 @@ Details were saved to {1}.</value>
   <data name="MyIconsTitle.Text" xml:space="preserve">
     <value>My Icons</value>
   </data>
+  <data name="MyIconsListSizer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Resize the Icon List</value>
+  </data>
   <data name="NewIconButton.Content" xml:space="preserve">
     <value>New Icon</value>
   </data>

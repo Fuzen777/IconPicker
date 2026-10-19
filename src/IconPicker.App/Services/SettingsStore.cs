@@ -27,6 +27,9 @@ internal sealed class AppSettings
 
     public List<string> Libraries { get; set; } = [];
 
+    /// <summary>The width of My Icons' list of saved icons, in effective pixels: three tiles to a row to start with.</summary>
+    public double MyIconsListWidth { get; set; } = 360;
+
     /// <summary>The last colors used on built icons (#RRGGBB), newest first.</summary>
     public List<string> RecentColors { get; set; } = [];
 
