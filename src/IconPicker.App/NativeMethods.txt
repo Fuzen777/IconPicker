@@ -6,3 +6,5 @@ INFINITE
 SetForegroundWindow
 GetDpiForWindow
 GetCommandLine
+DwmSetWindowAttribute
+DWMWINDOWATTRIBUTE

@@ -77,6 +77,7 @@
 
 ## Settings
 
+- **Theme**: Use Windows Setting (default, following Windows when it switches between light and dark), Light or Dark, applied at once to the window, its dialogs and lists, and the window frame.
 - **Icon Target**: Copy into the Folder, or Link to the File.
 - **Right-Click Entry**: turns on "Pick Folder Icon…" when right-clicking a folder, the empty space inside one, or a drive (under "Show more options" on Windows 11), opening the app on that folder. When the entry opens another copy of the app (an older install, a build folder), "Use This Copy" points it here.
 - **Keep Data with the App (Portable)**: off by default, with settings and saved icons in `%LocalAppData%\Icon Picker`. Turned on, they move to a `Data` folder next to IconPicker.exe, so the app can be carried with its data; turned off, they move back. Either way the app asks, moves the data and restarts in Settings, and says so if the move failed. Unavailable when the app's folder can't be written to, as in Program Files. A copy whose folder holds a `Data` folder starts portable.

@@ -50,6 +50,11 @@ internal sealed class DialogService(WindowContext windowContext)
     public async Task<ContentDialogResult> ShowAsync(ContentDialog dialog)
     {
         dialog.XamlRoot ??= windowContext.XamlRoot;
+        // A dialog sits outside the window's content, so it takes the theme chosen in Settings from there.
+        if (dialog.XamlRoot.Content is FrameworkElement windowContent)
+        {
+            dialog.RequestedTheme = windowContent.RequestedTheme;
+        }
         dialog.Style ??= (Style)Application.Current.Resources["DefaultContentDialogStyle"];
         await _oneDialogAtATime.WaitAsync();
         try

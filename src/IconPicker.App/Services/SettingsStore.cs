@@ -7,8 +7,19 @@ namespace IconPicker.App.Services;
 /// <summary>Where and how big the window was, in physical pixels.</summary>
 internal sealed record WindowPlacement(int X, int Y, int Width, int Height, bool IsMaximized);
 
+/// <summary>The app's light or dark look.</summary>
+internal enum AppTheme
+{
+    /// <summary>Follows Windows' own app mode.</summary>
+    System,
+    Light,
+    Dark,
+}
+
 internal sealed class AppSettings
 {
+    public AppTheme Theme { get; set; } = AppTheme.System;
+
     public IconTarget IconTarget { get; set; } = IconTarget.Copy;
 
     /// <summary>Whether icons shown by shortcuts (.lnk, .url) inside a folder are listed and predicted.</summary>

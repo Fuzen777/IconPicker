@@ -31,6 +31,21 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     public string VersionText => Strings.Format("AboutVersion", Assembly.GetExecutingAssembly().GetName().Version?.ToString(3));
 
+    /// <summary>The theme as the combo box's index: 0 for Windows' own, 1 for Light, 2 for Dark.</summary>
+    public int ThemeIndex
+    {
+        get => (int)_settings.Current.Theme;
+        set
+        {
+            if (value < 0 || value == ThemeIndex)
+            {
+                return;
+            }
+            _settings.Update(settings => settings.Theme = (AppTheme)value);
+            OnPropertyChanged();
+        }
+    }
+
     /// <summary>The Icon target as the combo box's index: 0 for Copy, 1 for Link.</summary>
     public int IconTargetIndex
     {

@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics;
+using Windows.UI.ViewManagement;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 
@@ -21,6 +22,7 @@ public sealed partial class MainWindow : Window
     private const int MinimumWidth = 760;
     private const int MinimumHeight = 540;
 
+    private readonly UISettings _uiSettings = new();
     private readonly Navigator _navigator;
     private readonly SettingsStore _settings;
     private RectInt32 _restoredBounds;
@@ -33,6 +35,11 @@ public sealed partial class MainWindow : Window
         Title = Strings.Get("AppTitle");
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
+        ApplyTheme();
+        RootGrid.ActualThemeChanged += (_, _) => SyncFrameTheme();
+        _settings.Changed += (_, _) => ApplyTheme();
+        // Follows Windows switching between light and dark while "Use Windows Setting" is chosen.
+        _uiSettings.ColorValuesChanged += (_, _) => DispatcherQueue.TryEnqueue(ApplyTheme);
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico"));
         RestorePlacement();
         AppWindow.Changed += OnAppWindowChanged;
@@ -42,6 +49,33 @@ public sealed partial class MainWindow : Window
     }
 
     private OverlappedPresenter Presenter => (OverlappedPresenter)AppWindow.Presenter;
+
+    /// <summary>
+    /// The theme chosen in Settings, or Windows' own. Windows' is read rather than inherited, since the app may have started in a theme chosen earlier.
+    /// </summary>
+    private void ApplyTheme()
+    {
+        var theme = _settings.Current.Theme;
+        var isDark = theme == AppTheme.Dark || (theme == AppTheme.System && _uiSettings.GetColorValue(UIColorType.Background).R < 128);
+        var requestedTheme = isDark ? ElementTheme.Dark : ElementTheme.Light;
+        if (RootGrid.RequestedTheme != requestedTheme)
+        {
+            RootGrid.RequestedTheme = requestedTheme;
+        }
+        SyncFrameTheme();
+    }
+
+    /// <summary>
+    /// The caption buttons and the frame's outline follow the theme shown. Windows still draws the outline around content extended into the title bar,
+    /// and left in its light theme over a dark window, it shows as light dots where the top corners round off.
+    /// </summary>
+    private unsafe void SyncFrameTheme()
+    {
+        var isDark = RootGrid.ActualTheme == ElementTheme.Dark;
+        AppWindow.TitleBar.PreferredTheme = isDark ? TitleBarTheme.Dark : TitleBarTheme.Light;
+        var useDarkMode = isDark ? 1 : 0;
+        PInvoke.DwmSetWindowAttribute((HWND)WinRT.Interop.WindowNative.GetWindowHandle(this), Windows.Win32.Graphics.Dwm.DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, &useDarkMode, sizeof(int));
+    }
 
     private double DisplayScale => PInvoke.GetDpiForWindow((HWND)WinRT.Interop.WindowNative.GetWindowHandle(this)) / 96.0;
 

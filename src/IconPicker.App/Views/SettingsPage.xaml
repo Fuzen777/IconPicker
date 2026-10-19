@@ -9,6 +9,17 @@
     <StackPanel MaxWidth="900" Padding="32,24,32,32" Spacing="4">
       <TextBlock x:Uid="SettingsTitle" Margin="0,0,0,16" Style="{StaticResource TitleTextBlockStyle}" />
 
+      <toolkit:SettingsCard x:Uid="ThemeCard">
+        <toolkit:SettingsCard.HeaderIcon>
+          <FontIcon Glyph="&#xE790;" />
+        </toolkit:SettingsCard.HeaderIcon>
+        <ComboBox MinWidth="220" SelectedIndex="{x:Bind ViewModel.ThemeIndex, Mode=TwoWay}">
+          <ComboBoxItem x:Uid="ThemeSystem" />
+          <ComboBoxItem x:Uid="ThemeLight" />
+          <ComboBoxItem x:Uid="ThemeDark" />
+        </ComboBox>
+      </toolkit:SettingsCard>
+
       <toolkit:SettingsCard x:Uid="IconTargetCard">
         <toolkit:SettingsCard.HeaderIcon>
           <FontIcon Glyph="&#xE71B;" />
