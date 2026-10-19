@@ -21,7 +21,7 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*" />
       <ColumnDefinition Width="Auto" />
-      <ColumnDefinition x:Name="PanelColumn" Width="440" MinWidth="200" />
+      <ColumnDefinition x:Name="PanelColumn" Width="440" />
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />

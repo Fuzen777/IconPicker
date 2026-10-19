@@ -18,10 +18,10 @@ internal enum AppTheme
 
 internal sealed class AppSettings
 {
-    /// <summary>Three saved icons to a row in My Icons' list.</summary>
+    /// <summary>Three saved icons to a row in My Icons' list (see MyIconsPage's steps).</summary>
     public const double DefaultMyIconsListWidth = 360;
 
-    /// <summary>Three icon tiles to a row in the picker beside the rows of "Each Subfolder".</summary>
+    /// <summary>Three icon tiles to a row in the picker beside the rows of "Each Subfolder" (see BatchModeView's steps).</summary>
     public const double DefaultPickerPanelWidth = 440;
 
     public AppTheme Theme { get; set; } = AppTheme.System;

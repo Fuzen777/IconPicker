@@ -10,7 +10,7 @@
   -->
   <Grid x:Name="PageGrid" Padding="32,24,32,24" ColumnSpacing="8" RowSpacing="16" SizeChanged="OnPageSizeChanged">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition x:Name="ListColumn" Width="360" MinWidth="120" />
+      <ColumnDefinition x:Name="ListColumn" Width="360" />
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>

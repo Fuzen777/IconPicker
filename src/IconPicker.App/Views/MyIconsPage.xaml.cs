@@ -13,6 +13,12 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges
     /// <summary>The builder's own minimum (see IconBuilderControl), kept free when the list is widened.</summary>
     private const double BuilderMinimumWidth = 300;
 
+    /// <summary>One saved icon's tile and the gap after it: the list widens by whole tiles, one more to a row each step.</summary>
+    private const double TilePitch = 116;
+
+    /// <summary>The list's width besides its tiles, so three to a row make the default width.</summary>
+    private const double ListOffset = AppSettings.DefaultMyIconsListWidth - (3 * TilePitch);
+
     private readonly SettingsStore _settings;
 
     public MyIconsPage()
@@ -20,9 +26,12 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges
         ViewModel = new MyIconsViewModel(App.Services);
         _settings = App.Services.GetRequiredService<SettingsStore>();
         InitializeComponent();
-        ListColumn.Width = new GridLength(_settings.Current.MyIconsListWidth);
+        ListSizer.StepWidth = TilePitch;
+        ListSizer.StepOffset = ListOffset;
         ListSizer.TargetColumn = ListColumn;
         ListSizer.DefaultWidth = AppSettings.DefaultMyIconsListWidth;
+        ListColumn.MinWidth = ListOffset + TilePitch;
+        ListColumn.Width = new GridLength(ListSizer.SnapToStep(_settings.Current.MyIconsListWidth));
     }
 
     public MyIconsViewModel ViewModel { get; }
@@ -44,7 +53,7 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges
     {
         var padding = PageGrid.Padding.Left + PageGrid.Padding.Right;
         var gaps = ListSizer.Width + (2 * PageGrid.ColumnSpacing);
-        ListColumn.MaxWidth = Math.Max(ListColumn.MinWidth, eventArgs.NewSize.Width - padding - gaps - BuilderMinimumWidth);
+        ListColumn.MaxWidth = Math.Max(ListColumn.MinWidth, ListSizer.SnapDownToStep(eventArgs.NewSize.Width - padding - gaps - BuilderMinimumWidth));
     }
 
     private void OnListResized(object? sender, EventArgs eventArgs)

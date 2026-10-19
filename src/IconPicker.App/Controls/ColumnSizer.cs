@@ -10,7 +10,7 @@ namespace IconPicker.App.Controls;
 
 /// <summary>
 /// A divider between two grid columns that resizes one of them: dragged with the mouse, or moved with the arrow keys once focused; a double-click puts back the default width.
-/// The width stays within the column's MinWidth and MaxWidth.
+/// With a step, the width only takes whole steps (one more tile to a row each), and stays within the column's MinWidth and MaxWidth.
 /// </summary>
 public sealed partial class ColumnSizer : Grid
 {
@@ -66,6 +66,24 @@ public sealed partial class ColumnSizer : Grid
     /// <summary>The width a double-click puts back.</summary>
     public double DefaultWidth { get; set; } = double.NaN;
 
+    /// <summary>The widths taken are <see cref="StepOffset"/> plus whole steps of this, at least one; 0 lets any width through.</summary>
+    public double StepWidth { get; set; }
+
+    /// <summary>What the column holds besides its steps: padding, and room for a scrollbar.</summary>
+    public double StepOffset { get; set; }
+
+    /// <summary>The nearest width made of whole steps.</summary>
+    public double SnapToStep(double width)
+    {
+        return StepWidth > 0 ? StepOffset + (Math.Max(1, Math.Round((width - StepOffset) / StepWidth)) * StepWidth) : width;
+    }
+
+    /// <summary>The widest width made of whole steps that fits in <paramref name="width"/>, or a single step.</summary>
+    public double SnapDownToStep(double width)
+    {
+        return StepWidth > 0 ? StepOffset + (Math.Max(1, Math.Floor((width - StepOffset) / StepWidth)) * StepWidth) : width;
+    }
+
     private double Direction => ResizesFollowingColumn ? -1 : 1;
 
     /// <summary>A drag or a key press finished resizing, so the new width can be kept.</summary>
@@ -113,7 +131,8 @@ public sealed partial class ColumnSizer : Grid
         {
             return;
         }
-        Resize(TargetColumn.ActualWidth + (Direction * (eventArgs.Key == VirtualKey.Right ? KeyboardStep : -KeyboardStep)));
+        var step = StepWidth > 0 ? StepWidth : KeyboardStep;
+        Resize(TargetColumn.ActualWidth + (Direction * (eventArgs.Key == VirtualKey.Right ? step : -step)));
         ResizeCompleted?.Invoke(this, EventArgs.Empty);
         eventArgs.Handled = true;
     }
@@ -133,7 +152,7 @@ public sealed partial class ColumnSizer : Grid
     {
         if (TargetColumn is not null)
         {
-            TargetColumn.Width = new GridLength(Math.Clamp(width, TargetColumn.MinWidth, Math.Max(TargetColumn.MinWidth, TargetColumn.MaxWidth)));
+            TargetColumn.Width = new GridLength(Math.Clamp(SnapToStep(width), TargetColumn.MinWidth, Math.Max(TargetColumn.MinWidth, TargetColumn.MaxWidth)));
         }
     }
 }
