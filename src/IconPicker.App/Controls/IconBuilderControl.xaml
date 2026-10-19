@@ -167,7 +167,9 @@
             RecentColors="{x:Bind ViewModel.RecentColors, Mode=OneWay}"
             Visibility="{x:Bind ViewModel.UsesBackgroundColor, Mode=OneWay}" />
 
+        <!-- The wheel nudges it by 5%; a right-click puts back the shape's natural size (see the code-behind). -->
         <Slider
+            x:Name="IconSizeSlider"
             x:Uid="BuilderSizeSlider"
             Margin="0,8,0,0"
             Maximum="100"

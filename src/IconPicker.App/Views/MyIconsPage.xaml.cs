@@ -22,6 +22,7 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges
         InitializeComponent();
         ListColumn.Width = new GridLength(_settings.Current.MyIconsListWidth);
         ListSizer.TargetColumn = ListColumn;
+        ListSizer.DefaultWidth = AppSettings.DefaultMyIconsListWidth;
     }
 
     public MyIconsViewModel ViewModel { get; }

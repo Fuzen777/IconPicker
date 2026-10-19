@@ -1,6 +1,7 @@
 using IconPicker.App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Windows.Foundation;
 
 namespace IconPicker.App.Controls;
@@ -18,6 +19,9 @@ public sealed partial class IconBuilderControl : UserControl
     public IconBuilderControl()
     {
         InitializeComponent();
+        // Handled events too: the slider's own parts may take them first.
+        IconSizeSlider.AddHandler(PointerWheelChangedEvent, new PointerEventHandler(OnIconSizeWheel), handledEventsToo: true);
+        IconSizeSlider.AddHandler(RightTappedEvent, new RightTappedEventHandler(OnIconSizeRightTapped), handledEventsToo: true);
     }
 
     public IconBuilderViewModel? ViewModel
@@ -43,6 +47,23 @@ public sealed partial class IconBuilderControl : UserControl
     private static void OnViewModelChanged(DependencyObject owner, DependencyPropertyChangedEventArgs eventArgs)
     {
         ((IconBuilderControl)owner).Bindings.Update();
+    }
+
+    private void OnIconSizeWheel(object sender, PointerRoutedEventArgs eventArgs)
+    {
+        var wheelDelta = eventArgs.GetCurrentPoint(IconSizeSlider).Properties.MouseWheelDelta;
+        if (wheelDelta != 0)
+        {
+            ViewModel?.NudgeIconSize(Math.Sign(wheelDelta));
+            // The settings pane would scroll otherwise.
+            eventArgs.Handled = true;
+        }
+    }
+
+    private void OnIconSizeRightTapped(object sender, RightTappedRoutedEventArgs eventArgs)
+    {
+        ViewModel?.ResetIconSize();
+        eventArgs.Handled = true;
     }
 
     private void OnModuleIconClick(object sender, ItemClickEventArgs eventArgs)

@@ -16,10 +16,12 @@
     </Style>
   </UserControl.Resources>
 
-  <Grid ColumnSpacing="24" RowSpacing="12">
+  <!-- The rows, a divider that resizes the picker beside them (remembered), and the picker. -->
+  <Grid x:Name="ViewGrid" ColumnSpacing="4" RowSpacing="12" SizeChanged="OnViewSizeChanged">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="400" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition x:Name="PanelColumn" Width="440" MinWidth="200" />
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -28,10 +30,10 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <controls:StatusBar Grid.ColumnSpan="2" Status="{x:Bind ViewModel.Status}" />
+    <controls:StatusBar Grid.ColumnSpan="3" Status="{x:Bind ViewModel.Status}" />
 
     <!-- Select all, filters, and search progress while rows are being filled in. -->
-    <Grid Grid.Row="1" Grid.ColumnSpan="2" ColumnSpacing="16">
+    <Grid Grid.Row="1" Grid.ColumnSpan="3" ColumnSpacing="16">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="Auto" />
@@ -116,9 +118,11 @@
     </StackPanel>
 
     <!-- Side panel: the selected row's picker. -->
+    <controls:ColumnSizer x:Name="PanelSizer" x:Uid="PickerPanelSizer" Grid.Row="2" Grid.Column="1" ResizeCompleted="OnPanelResized" />
+
     <Border
         Grid.Row="2"
-        Grid.Column="1"
+        Grid.Column="2"
         Padding="16"
         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -144,7 +148,7 @@
     </Border>
 
     <!-- Footer: counts and the two actions. -->
-    <Grid Grid.Row="3" Grid.ColumnSpan="2" ColumnSpacing="8">
+    <Grid Grid.Row="3" Grid.ColumnSpan="3" ColumnSpacing="8">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="Auto" />
@@ -154,6 +158,6 @@
       <Button Grid.Column="1" Command="{x:Bind ViewModel.RemoveCommand}" Content="{x:Bind ViewModel.RemoveText, Mode=OneWay}" />
       <Button Grid.Column="2" Command="{x:Bind ViewModel.ApplyCommand}" Content="{x:Bind ViewModel.ApplyText, Mode=OneWay}" Style="{StaticResource AccentButtonStyle}" />
     </Grid>
-    <ProgressBar Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Top" IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay}" />
+    <ProgressBar Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Top" IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay}" />
   </Grid>
 </UserControl>

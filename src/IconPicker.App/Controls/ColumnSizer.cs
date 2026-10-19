@@ -9,7 +9,7 @@ using Windows.System;
 namespace IconPicker.App.Controls;
 
 /// <summary>
-/// A divider between two grid columns that resizes the column before it: dragged with the mouse, or moved with the arrow keys once focused.
+/// A divider between two grid columns that resizes one of them: dragged with the mouse, or moved with the arrow keys once focused; a double-click puts back the default width.
 /// The width stays within the column's MinWidth and MaxWidth.
 /// </summary>
 public sealed partial class ColumnSizer : Grid
@@ -54,10 +54,19 @@ public sealed partial class ColumnSizer : Grid
         PointerReleased += OnPointerReleased;
         PointerCaptureLost += (_, _) => EndDrag();
         KeyDown += OnKeyDown;
+        DoubleTapped += OnDoubleTapped;
     }
 
-    /// <summary>The column the divider resizes, the one before it.</summary>
+    /// <summary>The column the divider resizes: the one before it, or the one after it with <see cref="ResizesFollowingColumn"/>.</summary>
     public ColumnDefinition? TargetColumn { get; set; }
+
+    /// <summary>The resized column sits after the divider, so dragging to the right narrows it.</summary>
+    public bool ResizesFollowingColumn { get; set; }
+
+    /// <summary>The width a double-click puts back.</summary>
+    public double DefaultWidth { get; set; } = double.NaN;
+
+    private double Direction => ResizesFollowingColumn ? -1 : 1;
 
     /// <summary>A drag or a key press finished resizing, so the new width can be kept.</summary>
     public event EventHandler? ResizeCompleted;
@@ -71,14 +80,13 @@ public sealed partial class ColumnSizer : Grid
         _isDragging = true;
         _dragStartX = eventArgs.GetCurrentPoint(null).Position.X;
         _dragStartWidth = TargetColumn.ActualWidth;
-        eventArgs.Handled = true;
     }
 
     private void OnPointerMoved(object sender, PointerRoutedEventArgs eventArgs)
     {
         if (_isDragging)
         {
-            Resize(_dragStartWidth + eventArgs.GetCurrentPoint(null).Position.X - _dragStartX);
+            Resize(_dragStartWidth + (Direction * (eventArgs.GetCurrentPoint(null).Position.X - _dragStartX)));
         }
     }
 
@@ -105,7 +113,18 @@ public sealed partial class ColumnSizer : Grid
         {
             return;
         }
-        Resize(TargetColumn.ActualWidth + (eventArgs.Key == VirtualKey.Right ? KeyboardStep : -KeyboardStep));
+        Resize(TargetColumn.ActualWidth + (Direction * (eventArgs.Key == VirtualKey.Right ? KeyboardStep : -KeyboardStep)));
+        ResizeCompleted?.Invoke(this, EventArgs.Empty);
+        eventArgs.Handled = true;
+    }
+
+    private void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs eventArgs)
+    {
+        if (TargetColumn is null || double.IsNaN(DefaultWidth))
+        {
+            return;
+        }
+        Resize(DefaultWidth);
         ResizeCompleted?.Invoke(this, EventArgs.Empty);
         eventArgs.Handled = true;
     }

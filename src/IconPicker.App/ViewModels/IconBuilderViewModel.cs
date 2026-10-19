@@ -47,6 +47,11 @@ public sealed partial class IconBuilderViewModel : ObservableObject
     private CancellationTokenSource? _previewCancellation;
     private bool _isLoading;
     private bool _isNameChangedByHand;
+    /// <summary>The Icon Size slider's range and the step of one wheel notch, in percent.</summary>
+    private const double MinimumIconSizePercent = 40;
+    private const double MaximumIconSizePercent = 100;
+    private const double IconSizeWheelStep = 5;
+
     private bool _isScaleChangedByHand;
 
     internal IconBuilderViewModel(IServiceProvider services, bool isForFolder)
@@ -354,6 +359,21 @@ public sealed partial class IconBuilderViewModel : ObservableObject
     partial void OnBackgroundColorChanged(Color value)
     {
         OnLookChanged();
+    }
+
+    /// <summary>Moves the icon size by whole steps, as the mouse wheel over the slider does.</summary>
+    public void NudgeIconSize(int steps)
+    {
+        IconSizePercent = Math.Clamp(Math.Round(IconSizePercent) + (steps * IconSizeWheelStep), MinimumIconSizePercent, MaximumIconSizePercent);
+    }
+
+    /// <summary>Back to the shape's natural size, which then follows the shape again until the slider is moved.</summary>
+    public void ResetIconSize()
+    {
+        _isLoading = true;
+        IconSizePercent = IconStyle.DefaultScale(Shape) * 100;
+        _isLoading = false;
+        _isScaleChangedByHand = false;
     }
 
     partial void OnIconSizePercentChanged(double value)

@@ -18,6 +18,12 @@ internal enum AppTheme
 
 internal sealed class AppSettings
 {
+    /// <summary>Three saved icons to a row in My Icons' list.</summary>
+    public const double DefaultMyIconsListWidth = 360;
+
+    /// <summary>Three icon tiles to a row in the picker beside the rows of "Each Subfolder".</summary>
+    public const double DefaultPickerPanelWidth = 440;
+
     public AppTheme Theme { get; set; } = AppTheme.System;
 
     public IconTarget IconTarget { get; set; } = IconTarget.Copy;
@@ -27,8 +33,11 @@ internal sealed class AppSettings
 
     public List<string> Libraries { get; set; } = [];
 
-    /// <summary>The width of My Icons' list of saved icons, in effective pixels: three tiles to a row to start with.</summary>
-    public double MyIconsListWidth { get; set; } = 360;
+    /// <summary>The width of My Icons' list of saved icons, in effective pixels.</summary>
+    public double MyIconsListWidth { get; set; } = DefaultMyIconsListWidth;
+
+    /// <summary>The width of the picker beside the rows of "Each Subfolder", in effective pixels.</summary>
+    public double PickerPanelWidth { get; set; } = DefaultPickerPanelWidth;
 
     /// <summary>The last colors used on built icons (#RRGGBB), newest first.</summary>
     public List<string> RecentColors { get; set; } = [];
