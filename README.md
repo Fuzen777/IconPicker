@@ -8,7 +8,7 @@ It's a native, portable Windows app (WinUI 3).
 
 ## Features
 
-- **Single** mode, for one folder: its current icon, the best icon found inside it, and every other candidate to choose from. Apply sets it; Remove Icon takes it off.
+- **Single** mode, for one folder: its current icon, the best icon found inside it, and every other candidate to choose from. Apply sets it; Remove Icon takes it off. The last icons you applied wait under Apply, to give another folder the same one.
 - **Batch** mode, for every subfolder at once: one row per subfolder with its predicted icon, ticked when it has none yet. Apply sets them all, and a deep search finds game and app folders at any depth.
 - **Ranking**: executables named like the folder first, sharp square icons before blurry or wide ones, and uninstallers, crash handlers, and redistributables left out.
 - **My Icons**: build your own icons from Microsoft's Fluent icons, an SVG, a picture, or an exe icon, set on a square, circle, or Windows folder background in your own colors.
