@@ -55,7 +55,9 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           $zip = "artifacts/release/IconPicker-$env:VERSION-win-x64.zip"
-          $arguments = @($env:GITHUB_REF_NAME, $zip, "$zip.sha256", '--title', "Icon Picker $env:VERSION", '--notes-file', '.github/release-notes.md', '--generate-notes')
+          # The notes name the zip with a <version> placeholder.
+          (Get-Content .github/release-notes.md -Raw).Replace('<version>', $env:VERSION) | Set-Content artifacts/release/notes.md
+          $arguments = @($env:GITHUB_REF_NAME, $zip, "$zip.sha256", '--title', "Icon Picker $env:VERSION", '--notes-file', 'artifacts/release/notes.md', '--generate-notes')
           # 0.x versions are marked as pre-releases.
           if ($env:VERSION.StartsWith('0.')) { $arguments += '--prerelease' }
           gh release create @arguments
