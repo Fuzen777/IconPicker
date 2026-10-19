@@ -4,7 +4,7 @@
     <RootNamespace>IconPicker.App</RootNamespace>
     <AssemblyName>IconPicker</AssemblyName>
     <Product>Icon Picker</Product>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
