@@ -23,7 +23,12 @@ internal static class DataLocation
 
     public static string AppDataFolder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Icon Picker");
 
-    public static string PortableFolder { get; } = Path.Combine(AppContext.BaseDirectory, PortableFolderName);
+    /// <summary>
+    /// The folder the app was unzipped or installed to: in the release layout, lib's parent, where the launcher IconPicker.exe sits; otherwise the app's own folder (a build).
+    /// </summary>
+    public static string AppRoot { get; } = FindAppRoot();
+
+    public static string PortableFolder { get; } = Path.Combine(AppRoot, PortableFolderName);
 
     public static bool IsPortable => _isPortable ??= Directory.Exists(PortableFolder);
 
@@ -36,7 +41,7 @@ internal static class DataLocation
         {
             return true;
         }
-        var probePath = Path.Combine(AppContext.BaseDirectory, $"write-test-{Guid.NewGuid():N}.tmp");
+        var probePath = Path.Combine(AppRoot, $"write-test-{Guid.NewGuid():N}.tmp");
         try
         {
             File.WriteAllText(probePath, "");
@@ -47,6 +52,14 @@ internal static class DataLocation
         {
             return false;
         }
+    }
+
+    private static string FindAppRoot()
+    {
+        var appFolder = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
+        var parentFolder = Path.GetDirectoryName(appFolder);
+        var isInLib = string.Equals(Path.GetFileName(appFolder), "lib", StringComparison.OrdinalIgnoreCase) && parentFolder is not null && File.Exists(Path.Combine(parentFolder, "IconPicker.exe"));
+        return isInLib ? parentFolder! : appFolder;
     }
 
     /// <summary>Starts a new copy of the app that moves the data once this one has exited. The caller then exits.</summary>

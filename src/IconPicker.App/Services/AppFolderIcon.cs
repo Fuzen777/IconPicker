@@ -22,7 +22,8 @@ internal static class AppFolderIcon
         return IsReleaseBuild && !string.Equals(settings.AppFolderIconPath, AppFolder.FullName, StringComparison.OrdinalIgnoreCase);
     }
 
-    public static DirectoryInfo AppFolder { get; } = new(Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory));
+    /// <summary>The folder the app was unzipped or installed to, the one people see (lib's parent in the release layout).</summary>
+    public static DirectoryInfo AppFolder { get; } = new(DataLocation.AppRoot);
 
     /// <summary>Sets the icon unless the folder already has one. A folder Windows won't let the app write to (such as Program Files) is left as it is.</summary>
     public static async Task ApplyAsync()
@@ -33,7 +34,7 @@ internal static class AppFolderIcon
             {
                 return;
             }
-            var appIcon = new IconSource(Path.Combine(AppFolder.FullName, "Assets", "AppIcon.ico"), IconSourceKind.IconFile);
+            var appIcon = new IconSource(Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico"), IconSourceKind.IconFile);
             await IconApplyService.ApplyAsync([new IconChange(AppFolder.FullName, IconChangeKind.Set, appIcon)], IconTarget.Copy).ConfigureAwait(false);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)

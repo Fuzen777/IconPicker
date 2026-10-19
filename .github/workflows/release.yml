@@ -1,5 +1,5 @@
 # Builds Icon Picker on GitHub's Windows machines and publishes it.
-# - Pushing a version tag (v0.2.0, matching <Version> in IconPicker.App.csproj) builds, tests and publishes a GitHub release with the zip.
+# - Pushing a version tag (v0.2.0, matching <Version> in Directory.Build.props) builds, tests and publishes a GitHub release with the zip.
 # - Running it by hand (Actions > Release > Run workflow) does the same without publishing: the zip is kept with the run, to check a build.
 name: Release
 
@@ -28,7 +28,7 @@ jobs:
           $version = dotnet msbuild src/IconPicker.App/IconPicker.App.csproj -getProperty:Version
           "version=$version" >> $env:GITHUB_OUTPUT
           if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") {
-            throw "The tag $env:GITHUB_REF_NAME doesn't match the version $version in IconPicker.App.csproj."
+            throw "The tag $env:GITHUB_REF_NAME doesn't match the version $version in Directory.Build.props."
           }
 
       - name: Build, test and check formatting

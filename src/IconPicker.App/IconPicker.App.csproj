@@ -4,7 +4,6 @@
     <RootNamespace>IconPicker.App</RootNamespace>
     <AssemblyName>IconPicker</AssemblyName>
     <Product>Icon Picker</Product>
-    <Version>0.1.1</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -32,9 +31,6 @@
     <!-- The built-in icons (Fluent UI System Icons) and their license, made by Scripts\Build-FluentIconLibrary.ps1. -->
     <Content Include="Assets\FluentIcons.zip" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="Assets\FluentIcons-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <!-- The app's own license and the third-party notices travel with every published copy. -->
-    <Content Include="..\..\LICENSE" Link="LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="..\..\THIRD-PARTY-NOTICES.md" Link="THIRD-PARTY-NOTICES.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

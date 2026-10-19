@@ -87,7 +87,7 @@
 
 ## Installing
 
-- **Release zip**: each GitHub release has `IconPicker-<version>-win-x64.zip`, an `Icon Picker` folder to extract anywhere and run, with nothing installed; extracting a newer one over it updates it.
+- **Release zip**: each GitHub release has `IconPicker-<version>-win-x64.zip`, an `Icon Picker` folder to extract anywhere and run, with nothing installed; extracting a newer one over it updates it. Its top holds only `IconPicker.exe` (a small launcher), the licences and, when portable, `Data`; the app and its runtime sit in `lib`.
 - **Its own folder icon**: the first time a release copy starts in a folder, that folder gets the app's icon, unless it already has one. Once per location, so an icon removed or replaced by hand stays that way; a folder Windows won't let it write to (such as Program Files) is left as it is.
 - **Scripts\Install.cmd** publishes the app to `%LocalAppData%\Programs\Icon Picker` and adds a Start menu shortcut; run it again to update.
 - **Scripts\Uninstall.cmd** removes the right-click entry, the shortcut and the install folder; settings, saved icons (moved back to `%LocalAppData%` when kept next to the app) and the icons given to folders are kept.

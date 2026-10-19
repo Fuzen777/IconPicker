@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The IconPicker.exe at the top of a release, starting the app in lib\ so the dozens of runtime files stay out of sight.
+    Built for .NET Framework 4.8, which every supported Windows version includes, so it needs no runtime of its own and stays a few kilobytes.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <TargetPlatformMinVersion></TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion></SupportedOSPlatformVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>IconPicker</AssemblyName>
+    <RootNamespace>IconPicker.Launcher</RootNamespace>
+    <Product>Icon Picker</Product>
+    <ApplicationIcon>..\IconPicker.App\Assets\AppIcon.ico</ApplicationIcon>
+    <DebugType Condition="'$(Configuration)' != 'Debug'">none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- No IconPicker.exe.config beside it: it runs on the .NET Framework 4.8 Windows includes, needing no settings. -->
+    <GenerateSupportedRuntime>false</GenerateSupportedRuntime>
+  </PropertyGroup>
+</Project>

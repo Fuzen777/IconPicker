@@ -22,7 +22,7 @@ The full list is in [FEATURES.md](FEATURES.md).
 ## Download
 
 1. Download the latest `IconPicker-<version>-win-x64.zip` from [Releases](https://github.com/Fuzen777/IconPicker/releases).
-2. Extract it anywhere and run `IconPicker.exe` in the `Icon Picker` folder it holds.
+2. Extract it anywhere and run `IconPicker.exe` in the `Icon Picker` folder it holds. The app itself and its runtime sit in the `lib` folder beside it.
 
 The app isn't code-signed yet, so Windows SmartScreen may say "Windows protected your PC" the first time: choose **More info**, then **Run anyway**. You can also right-click the zip, choose **Properties** and tick **Unblock** before extracting it.
 
