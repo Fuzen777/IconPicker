@@ -15,7 +15,7 @@
 
   <!-- Sized to the window when it opens (see FitToWindow). -->
   <Grid x:Name="ContentGrid" Width="940" Height="580">
-    <!-- First step from Icons…: the saved icons, then the built-in ones. -->
+    <!-- First step from Icons: the saved icons, then the built-in ones. -->
     <controls:IconListControl ViewModel="{x:Bind List}" Visibility="{x:Bind IsListShown}" />
 
     <Grid RowSpacing="12" Visibility="{x:Bind IsBuilderShown}">

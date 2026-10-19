@@ -11,7 +11,7 @@ internal sealed class IconBuilderService(IServiceProvider services, DialogServic
     /// <summary>A shape suits an icon being customized: pictures and executables' icons keep their colors on a rounded square.</summary>
     public static IconStyle CustomizeStyle { get; } = new(null, IconShape.Rounded, IconStyle.Default.BackgroundColor, IconStyle.DefaultScale(IconShape.Rounded));
 
-    /// <summary>Icons…: the saved icons, then the built-in ones. Null when cancelled.</summary>
+    /// <summary>Icons: the saved icons, then the built-in ones. Null when cancelled.</summary>
     public Task<IconCandidate?> PickIconAsync()
     {
         return ShowAsync(dialog => dialog.ShowList());

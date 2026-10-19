@@ -38,12 +38,12 @@
     <value>Drop a Folder Here</value>
   </data>
   <data name="HomeChooseFolderButton.Content" xml:space="preserve">
-    <value>Choose Folder…</value>
+    <value>Choose Folder</value>
   </data>
 
   <!-- Folder page -->
   <data name="ChangeFolderButton.Content" xml:space="preserve">
-    <value>Change Folder…</value>
+    <value>Change Folder</value>
   </data>
   <data name="ModeThisFolder.Text" xml:space="preserve">
     <value>This Folder</value>
@@ -246,7 +246,7 @@
     <value>Icons in {0} ({1})</value>
   </data>
   <data name="BrowseButtonText.Text" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Browse</value>
   </data>
   <data name="BackToCandidatesButton.Content" xml:space="preserve">
     <value>Back to the Folder's Icons</value>
@@ -261,7 +261,7 @@
     <value>Nothing in this folder can give it an icon. Use Browse to pick any icon or picture.</value>
   </data>
   <data name="BrowseButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Browse</value>
   </data>
   <data name="SearchStoppedText.Text" xml:space="preserve">
     <value>The search of this folder stopped when you picked an icon yourself.</value>
@@ -476,7 +476,7 @@
     <value>Folders you rescan often, such as a Steam library. Rescan them from Home.</value>
   </data>
   <data name="AddLibraryButton.Content" xml:space="preserve">
-    <value>Add Library…</value>
+    <value>Add Library</value>
   </data>
   <data name="RestartExplorerCard.Header" xml:space="preserve">
     <value>Restart Explorer</value>
@@ -656,10 +656,10 @@ Details were saved to {1}.</value>
     <value>From {0}</value>
   </data>
   <data name="BuilderBuiltInButton.Content" xml:space="preserve">
-    <value>Built-In Icons…</value>
+    <value>Built-In Icons</value>
   </data>
   <data name="BuilderBrowseButton.Content" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Browse</value>
   </data>
   <data name="BuilderSeveralColors.Text" xml:space="preserve">
     <value>This SVG has several colors, which are kept.</value>
@@ -773,19 +773,19 @@ Details were saved to {1}.</value>
     <value>No built-in icon matches.</value>
   </data>
   <data name="PickIconButtonText.Text" xml:space="preserve">
-    <value>Icons…</value>
+    <value>Icons</value>
   </data>
   <data name="PickIconButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Icons…</value>
+    <value>Icons</value>
   </data>
   <data name="PickIconButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Your saved icons and the built-in icons</value>
   </data>
   <data name="CustomizeButtonText.Text" xml:space="preserve">
-    <value>Customize…</value>
+    <value>Customize</value>
   </data>
   <data name="CustomizeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Customize…</value>
+    <value>Customize</value>
   </data>
   <data name="CustomizeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Put the picked icon on a background in the builder, and recolor an SVG drawn in one color</value>

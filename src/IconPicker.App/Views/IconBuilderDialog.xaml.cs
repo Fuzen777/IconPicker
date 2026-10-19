@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 namespace IconPicker.App.Views;
 
 /// <summary>
-/// The builder opened from a folder's picker. It starts on the icon list (Icons…), where a saved icon is picked as it is and a built-in one moves on to the builder, or straight on the builder (an SVG from Browse, Customize…). Only one dialog shows at a time, so everything happens inside this one.
+/// The builder opened from a folder's picker. It starts on the icon list (Icons), where a saved icon is picked as it is and a built-in one moves on to the builder, or straight on the builder (an SVG from Browse, Customize). Only one dialog shows at a time, so everything happens inside this one.
 /// </summary>
 public sealed partial class IconBuilderDialog : ContentDialog
 {

@@ -7,7 +7,7 @@ using IconPicker.Core.Candidates;
 
 namespace IconPicker.App.ViewModels;
 
-/// <summary>The ranked icon grid with Browse, Icons… and Customize…, shared by single mode and batch mode's side panel.</summary>
+/// <summary>The ranked icon grid with Browse, Icons and Customize, shared by single mode and batch mode's side panel.</summary>
 public sealed partial class IconPickerViewModel : ObservableObject
 {
     public const int TopCandidateCount = 50;
@@ -252,7 +252,7 @@ public sealed partial class IconPickerViewModel : ObservableObject
         }
     }
 
-    /// <summary>An icon from outside the folder's search (Browse, Icons…, Customize…) is kept at the top, in view, and picked.</summary>
+    /// <summary>An icon from outside the folder's search (Browse, Icons, Customize) is kept at the top, in view, and picked.</summary>
     private void PickOutsideCandidate(CandidateViewModel candidate)
     {
         KeepAtTop(candidate);
