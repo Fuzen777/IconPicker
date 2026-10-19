@@ -250,6 +250,11 @@ public sealed partial class BatchRowViewModel : ObservableObject
         };
         if (outcome.Result is IconChangeResult.Applied or IconChangeResult.Unchanged)
         {
+            // An icon picked by hand joins "Single"'s recent icons; predictions applied by the hundred would only crowd them out.
+            if (outcome.Change.Kind == IconChangeKind.Set && _picker is { HasUserChoice: true, Choice: { } choice } && choice.Source == outcome.Change.Source)
+            {
+                _ = _services.GetRequiredService<RecentIconRecorder>().RecordAsync(choice.Candidate);
+            }
             IsUserChanged = false;
             _hasOutcome = true;
             SetCheckedQuietly(false);

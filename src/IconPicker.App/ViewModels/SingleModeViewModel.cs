@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -6,13 +7,14 @@ using IconPicker.Core.Applying;
 using IconPicker.Core.Candidates;
 using IconPicker.Core.Folders;
 using IconPicker.Core.Icons;
+using IconPicker.Core.Recent;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 
 namespace IconPicker.App.ViewModels;
 
-/// <summary>"Single": the folder's current icon, the one picked for it, and the picker.</summary>
+/// <summary>"Single": the folder's current icon, the one picked for it, the recent icons and the picker.</summary>
 public sealed partial class SingleModeViewModel : ObservableObject
 {
     private const int LargeIconSize = 256;
@@ -22,6 +24,8 @@ public sealed partial class SingleModeViewModel : ObservableObject
     private readonly SettingsStore _settings;
     private readonly ThumbnailLoader _thumbnailLoader;
     private readonly ElevatedRetry _elevatedRetry;
+    private readonly RecentIconStore _recentIconStore;
+    private readonly RecentIconRecorder _recentIconRecorder;
     private IReadOnlyList<IconChange> _refusedChanges = [];
     private bool _hasUserChoice;
     private CancellationTokenSource? _searchCancellation;
@@ -34,6 +38,8 @@ public sealed partial class SingleModeViewModel : ObservableObject
         _settings = services.GetRequiredService<SettingsStore>();
         _thumbnailLoader = services.GetRequiredService<ThumbnailLoader>();
         _elevatedRetry = services.GetRequiredService<ElevatedRetry>();
+        _recentIconStore = services.GetRequiredService<RecentIconStore>();
+        _recentIconRecorder = services.GetRequiredService<RecentIconRecorder>();
         Picker = new IconPickerViewModel(folder, services.GetRequiredService<PickerService>(), _thumbnailLoader, _settings, services.GetRequiredService<IconBuilderService>());
         Picker.PropertyChanged += OnPickerPropertyChanged;
         Picker.ChoiceChangedByUser += OnChoiceChangedByUser;
@@ -42,6 +48,12 @@ public sealed partial class SingleModeViewModel : ObservableObject
     public IconPickerViewModel Picker { get; }
 
     public StatusMessage Status { get; } = new();
+
+    /// <summary>The last icons applied by hand, most recent first, to give this folder one of them too.</summary>
+    public ObservableCollection<CandidateViewModel> RecentIcons { get; } = [];
+
+    [ObservableProperty]
+    public partial bool HasRecentIcons { get; private set; }
 
     public bool HasUnappliedChanges => _hasUserChoice;
 
@@ -71,7 +83,7 @@ public sealed partial class SingleModeViewModel : ObservableObject
     public async Task LoadAsync(CancellationToken cancellationToken)
     {
         UpdateNewIconDescription();
-        await RefreshCurrentIconAsync();
+        await Task.WhenAll(RefreshCurrentIconAsync(), RefreshRecentIconsAsync());
         if (Picker.HasUserChoice)
         {
             Picker.StopSearch();
@@ -110,6 +122,29 @@ public sealed partial class SingleModeViewModel : ObservableObject
     private Task RemoveAsync()
     {
         return RunChangesAsync([new IconChange(_folder.FullName, IconChangeKind.Remove, ShortcutPath: _shortcutPath)]);
+    }
+
+    public void PickRecentIcon(CandidateViewModel recentIcon)
+    {
+        Picker.PickRecentIcon(recentIcon);
+    }
+
+    /// <summary>Takes an icon off the recent icons. It can still be applied here if it is picked.</summary>
+    public async Task RemoveRecentIconAsync(CandidateViewModel recentIcon)
+    {
+        if (recentIcon.Candidate.Recent is not { } listed)
+        {
+            return;
+        }
+        try
+        {
+            await _recentIconStore.RemoveAsync(listed.Id);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            ErrorLog.Write(exception);
+        }
+        await RefreshRecentIconsAsync();
     }
 
     [RelayCommand]
@@ -157,6 +192,23 @@ public sealed partial class SingleModeViewModel : ObservableObject
         }
         DisplayText.ShowOutcomes(Status, outcomes, RetryAsAdminCommand, wasElevated);
         await RefreshCurrentIconAsync();
+        var setOutcome = outcomes.FirstOrDefault(outcome => outcome.Change.Kind == IconChangeKind.Set && outcome.Result is IconChangeResult.Applied or IconChangeResult.Unchanged);
+        if (setOutcome is not null && Picker.Choice is { } choice && choice.Source == setOutcome.Change.Source)
+        {
+            await _recentIconRecorder.RecordAsync(choice.Candidate);
+            await RefreshRecentIconsAsync();
+        }
+    }
+
+    private async Task RefreshRecentIconsAsync()
+    {
+        var recentIcons = await Task.Run(() => _recentIconStore.List().Select(recentIcon => RecentIconCandidates.Create(_recentIconStore, recentIcon)).OfType<IconCandidate>().ToList());
+        RecentIcons.Clear();
+        foreach (var recentIcon in recentIcons)
+        {
+            RecentIcons.Add(new CandidateViewModel(recentIcon, _thumbnailLoader));
+        }
+        HasRecentIcons = RecentIcons.Count > 0;
     }
 
     private async Task RefreshCurrentIconAsync()

@@ -47,7 +47,7 @@ public static class IconTargetResolver
     {
         return target == IconTarget.Link
             && !source.IsConverted
-            && !source.IsBuilt
+            && !source.IsAppData
             && FileHelpers.IsInsideFolder(source.FilePath, folder.FullName)
             && !IsFolderOwnCopy(folder, source)
             && HasFullSizeImage(source);
@@ -71,23 +71,30 @@ public static class IconTargetResolver
         {
             return IconWritePlan.Link(Path.GetRelativePath(folder.FullName, source.FilePath), source.IconIndex);
         }
+        return IconWritePlan.Copy(await CreateIconFileAsync(source, cancellationToken).ConfigureAwait(false));
+    }
+
+    /// <summary>The .ico file a copy of the icon gets: extracted from an executable, converted from a picture or an SVG, and with larger images added when its largest is under 256 px.</summary>
+    /// <exception cref="IconSourceException">The file can't give an icon.</exception>
+    public static async Task<byte[]> CreateIconFileAsync(IconSource source, CancellationToken cancellationToken)
+    {
         switch (source.Kind)
         {
             case IconSourceKind.Module:
                 var extractedIcon = ExeIconExtractor.ExtractIconFile(source.FilePath, source.IconIndex)
                     ?? throw new IconSourceException(IconSourceProblem.NoIcon, $"{source.FilePath} has no readable icon at index {source.IconIndex}.");
-                return IconWritePlan.Copy(await SmallIconEnlarger.EnlargeAsync(extractedIcon).ConfigureAwait(false));
+                return await SmallIconEnlarger.EnlargeAsync(extractedIcon).ConfigureAwait(false);
             case IconSourceKind.IconFile:
                 var iconFile = await File.ReadAllBytesAsync(source.FilePath, cancellationToken).ConfigureAwait(false);
                 if (IcoFileBuilder.ReadImageSizes(iconFile) is null)
                 {
                     throw new IconSourceException(IconSourceProblem.InvalidIconFile, $"{source.FilePath} is not a valid .ico file.");
                 }
-                return IconWritePlan.Copy(await SmallIconEnlarger.EnlargeAsync(iconFile).ConfigureAwait(false));
+                return await SmallIconEnlarger.EnlargeAsync(iconFile).ConfigureAwait(false);
             case IconSourceKind.Vector:
                 try
                 {
-                    return IconWritePlan.Copy(await VectorIconConverter.ConvertAsync(source.FilePath, cancellationToken).ConfigureAwait(false));
+                    return await VectorIconConverter.ConvertAsync(source.FilePath, cancellationToken).ConfigureAwait(false);
                 }
                 catch (InvalidDataException exception)
                 {
@@ -96,7 +103,7 @@ public static class IconTargetResolver
             default:
                 try
                 {
-                    return IconWritePlan.Copy(await ImageIconConverter.ConvertAsync(source.FilePath, cancellationToken).ConfigureAwait(false));
+                    return await ImageIconConverter.ConvertAsync(source.FilePath, cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception exception) when (exception is InvalidDataException or System.Runtime.InteropServices.COMException or ArgumentException)
                 {

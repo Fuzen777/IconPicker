@@ -1,4 +1,5 @@
 using IconPicker.Core.Builder;
+using IconPicker.Core.Recent;
 
 namespace IconPicker.Core.Candidates;
 
@@ -12,7 +13,8 @@ namespace IconPicker.Core.Candidates;
 /// <param name="ProductName">For an .exe or .dll, the product name in its version information, which can name the app when the file name doesn't (SandMan.exe is "Sandboxie-Plus").</param>
 /// <param name="ShortcutPath">For an icon shown by a shortcut (.lnk, .url) inside the folder, the shortcut's full path. <paramref name="RelativePath"/> and <paramref name="Depth"/> then describe the shortcut, while <paramref name="Source"/> is the file its icon comes from.</param>
 /// <param name="Built">For an icon made in the builder, what it was made from. <paramref name="Source"/> is then the finished .ico file, kept in My icons or among the app's built icons.</param>
-public sealed record IconCandidate(IconSource Source, string RelativePath, int Depth, long FileSize, int Width, int Height, string? ProductName = null, string? ShortcutPath = null, BuiltIconOrigin? Built = null)
+/// <param name="Recent">For one of the recent icons, what it was when applied. <paramref name="Source"/> is then its copy among the app's data.</param>
+public sealed record IconCandidate(IconSource Source, string RelativePath, int Depth, long FileSize, int Width, int Height, string? ProductName = null, string? ShortcutPath = null, BuiltIconOrigin? Built = null, RecentIcon? Recent = null)
 {
     private const double SquareTolerance = 0.05;
 

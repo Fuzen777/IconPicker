@@ -42,6 +42,13 @@
     </Grid>
   </DataTemplate>
 
+  <!-- One of "Single"'s recent icons: the icon alone, with what it was taken from on hover. -->
+  <DataTemplate x:Key="RecentIconTileTemplate" x:DataType="viewModels:CandidateViewModel">
+    <Grid Width="56" Height="56" AutomationProperties.Name="{x:Bind FileName}" ToolTipService.ToolTip="{x:Bind ToolTipText}">
+      <Image Width="40" Height="40" Source="{x:Bind Thumbnail, Mode=OneWay}" Stretch="Uniform" />
+    </Grid>
+  </DataTemplate>
+
   <!-- A color to pick. -->
   <DataTemplate x:Key="ColorSwatchTemplate" x:DataType="viewModels:ColorSwatchViewModel">
     <Border

@@ -158,12 +158,12 @@ public sealed class SvgCandidateTests
         using var testFolder = new TestFolder();
         var profile = testFolder.CreateFolder("Profile");
         var builtIcon = testFolder.CreateFile(@"Profile\AppData\Icon Picker\Built\icon.ico", IcoFileBuilder.Build([IcoImage.FromPng(256, await TestImages.CreatePngAsync(256, 256))]));
-        var source = new IconSource(builtIcon.FullName, IconSourceKind.IconFile, IsBuilt: true);
+        var source = new IconSource(builtIcon.FullName, IconSourceKind.IconFile, IsAppData: true);
 
         var plan = await IconTargetResolver.ResolveAsync(profile, source, IconTarget.Link, CancellationToken.None);
 
         Assert.IsFalse(IconTargetResolver.WillLink(profile, source, IconTarget.Link));
-        Assert.IsTrue(IconTargetResolver.WillLink(profile, source with { IsBuilt = false }, IconTarget.Link));
+        Assert.IsTrue(IconTargetResolver.WillLink(profile, source with { IsAppData = false }, IconTarget.Link));
         Assert.AreEqual(Folders.FolderIconWriter.CopiedIconSetting, plan.IconSetting);
     }
 }

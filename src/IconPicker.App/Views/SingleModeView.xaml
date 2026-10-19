@@ -4,6 +4,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:IconPicker.App.Controls">
+  <UserControl.Resources>
+    <MenuFlyout x:Key="RecentIconMenu">
+      <MenuFlyoutItem x:Uid="RemoveRecentIconMenuItem" Click="OnRemoveRecentIconClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE711;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+    </MenuFlyout>
+  </UserControl.Resources>
+
   <Grid ColumnSpacing="24" RowSpacing="12">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="340" />
@@ -48,6 +58,20 @@
           <Button x:Uid="RemoveIconButton" Command="{x:Bind ViewModel.RemoveCommand}" />
         </StackPanel>
         <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay}" />
+
+        <!-- The last icons applied by hand, to give this folder the same one; right-click one to take it off. -->
+        <StackPanel Spacing="4" Visibility="{x:Bind ViewModel.HasRecentIcons, Mode=OneWay}">
+          <TextBlock x:Uid="RecentIconsHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+          <GridView
+              x:Uid="RecentIconsGrid"
+              x:Name="RecentIconsGrid"
+              ItemsSource="{x:Bind ViewModel.RecentIcons}"
+              ItemTemplate="{StaticResource RecentIconTileTemplate}"
+              SelectionMode="None"
+              IsItemClickEnabled="True"
+              ItemClick="OnRecentIconClick"
+              ContextRequested="OnRecentIconContextRequested" />
+        </StackPanel>
       </StackPanel>
     </ScrollViewer>
 

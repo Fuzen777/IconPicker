@@ -21,8 +21,8 @@ public enum IconSourceKind
 /// <param name="FilePath">The file's full path.</param>
 /// <param name="Kind">What kind of file it is.</param>
 /// <param name="IconIndex">For an .exe or .dll, which of its icons; 0 otherwise.</param>
-/// <param name="IsBuilt">An icon made in the builder and kept among the app's data. It is always copied, even into a folder that holds the app's data, so editing or deleting it never changes a folder.</param>
-public sealed record IconSource(string FilePath, IconSourceKind Kind, int IconIndex = 0, bool IsBuilt = false)
+/// <param name="IsAppData">An icon kept among the app's data: made in the builder, or one of the recent icons. It is always copied, even into a folder that holds the app's data, so editing, deleting or dropping it from the recent icons never changes a folder.</param>
+public sealed record IconSource(string FilePath, IconSourceKind Kind, int IconIndex = 0, bool IsAppData = false)
 {
     private static readonly HashSet<string> ModuleExtensions = new(StringComparer.OrdinalIgnoreCase) { ".exe", ".dll" };
     private static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase) { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tif", ".tiff", ".webp" };

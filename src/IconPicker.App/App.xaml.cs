@@ -2,6 +2,7 @@ using IconPicker.App.Services;
 using IconPicker.Core.Builder;
 using IconPicker.Core.Launch;
 using IconPicker.Core.Library;
+using IconPicker.Core.Recent;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
@@ -40,8 +41,11 @@ public partial class App : Application
             .AddSingleton(new FluentIconLibrary(Path.Combine(AppContext.BaseDirectory, "Assets", "FluentIcons.zip")))
             .AddSingleton<BuiltIconCache>()
             .AddSingleton<IconBuilderService>()
+            .AddSingleton(new RecentIconStore(Path.Combine(SettingsStore.DataFolder, "Recent icons")))
+            .AddSingleton<RecentIconRecorder>()
             .BuildServiceProvider();
         _ = Task.Run(BuiltIconCache.DeleteOldIcons);
+        _ = Task.Run(Services.GetRequiredService<RecentIconStore>().DeleteUnlisted);
         ApplyOwnFolderIcon();
         _mainWindow = new MainWindow();
         Services.GetRequiredService<WindowContext>().Attach(_mainWindow);

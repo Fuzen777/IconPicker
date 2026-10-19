@@ -83,6 +83,15 @@
   <data name="RemoveIconButton.Content" xml:space="preserve">
     <value>Remove Icon</value>
   </data>
+  <data name="RecentIconsHeader.Text" xml:space="preserve">
+    <value>Recent Icons</value>
+  </data>
+  <data name="RecentIconsGrid.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Recent Icons</value>
+  </data>
+  <data name="RemoveRecentIconMenuItem.Text" xml:space="preserve">
+    <value>Remove from Recent Icons</value>
+  </data>
   <data name="NoNewIcon" xml:space="preserve">
     <value>Pick an icon on the right.</value>
   </data>
@@ -798,6 +807,9 @@ Details were saved to {1}.</value>
   </data>
   <data name="BuiltIconToolTip" xml:space="preserve">
     <value>{0}, built for this folder</value>
+  </data>
+  <data name="RecentIconToolTip" xml:space="preserve">
+    <value>{0}, used recently</value>
   </data>
   <data name="IconListDialogTitle" xml:space="preserve">
     <value>Icons</value>

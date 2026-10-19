@@ -132,6 +132,13 @@ public sealed partial class IconPickerViewModel : ObservableObject
         ChoiceChangedByUser?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>Picks one of "Single"'s recent icons, as Browse would.</summary>
+    internal void PickRecentIcon(CandidateViewModel candidate)
+    {
+        IsProblemOpen = false;
+        PickOutsideCandidate(candidate);
+    }
+
     /// <summary>Takes up "Include shortcuts" as last saved, after another picker changed it.</summary>
     internal void SyncShortcutFilter()
     {
@@ -236,6 +243,11 @@ public sealed partial class IconPickerViewModel : ObservableObject
             ShowProblem(Strings.Format("BrowseNoIcon", choice.FileName));
             return;
         }
+        // A recent icon's file is named after its hash: the builder names it after what it was.
+        if (choice.Candidate.Recent is { } recentIcon)
+        {
+            source = source with { Name = recentIcon.IsBuilt ? recentIcon.Name : Path.GetFileNameWithoutExtension(recentIcon.Name) };
+        }
         PickBuiltIcon(await _iconBuilder.BuildAsync(source, IconBuilderService.CustomizeStyle));
     }
 
@@ -252,7 +264,7 @@ public sealed partial class IconPickerViewModel : ObservableObject
         }
     }
 
-    /// <summary>An icon from outside the folder's search (Browse, Icons, Customize) is kept at the top, in view, and picked.</summary>
+    /// <summary>An icon from outside the folder's search (Browse, Icons, Customize, the recent icons) is kept at the top, in view, and picked.</summary>
     private void PickOutsideCandidate(CandidateViewModel candidate)
     {
         KeepAtTop(candidate);

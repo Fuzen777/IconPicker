@@ -11,7 +11,7 @@ internal static class BuiltIconCandidates
     public static IconCandidate Create(string iconPath, BuiltIconOrigin origin)
     {
         var largestSize = ImageIconConverter.IconSizes[0];
-        return new IconCandidate(new IconSource(iconPath, IconSourceKind.IconFile, IsBuilt: true), iconPath, Depth: 0, new FileInfo(iconPath).Length, largestSize, largestSize, Built: origin);
+        return new IconCandidate(new IconSource(iconPath, IconSourceKind.IconFile, IsAppData: true), iconPath, Depth: 0, new FileInfo(iconPath).Length, largestSize, largestSize, Built: origin);
     }
 
     /// <summary>
