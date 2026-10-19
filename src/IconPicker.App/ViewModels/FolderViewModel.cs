@@ -38,7 +38,7 @@ public sealed partial class FolderViewModel : ObservableObject, IDisposable
     /// <summary>The folder's tab in the navigation pane: its own name, or all the libraries for "Rescan all".</summary>
     public string TabName => IsSingleRoot ? DisplayText.FolderName(Folder.FullName) : Title;
 
-    /// <summary>For a folder opened through a shortcut, which shortcut shows its icon too in "This folder".</summary>
+    /// <summary>For a folder opened through a shortcut, which shortcut shows its icon too in "Single".</summary>
     public string? ShortcutText { get; }
 
     public bool HasShortcut => ShortcutText is not null;

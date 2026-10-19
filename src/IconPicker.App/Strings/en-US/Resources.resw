@@ -46,10 +46,10 @@
     <value>Change Folder</value>
   </data>
   <data name="ModeThisFolder.Text" xml:space="preserve">
-    <value>This Folder</value>
+    <value>Single</value>
   </data>
   <data name="ModeEachSubfolder.Text" xml:space="preserve">
-    <value>Each Subfolder</value>
+    <value>Batch</value>
   </data>
   <data name="DeepToggle.OnContent" xml:space="preserve">
     <value>Deep Search</value>
@@ -152,7 +152,7 @@
     <value>No Subfolders to Work On</value>
   </data>
   <data name="NoRowsMessage.Text" xml:space="preserve">
-    <value>Nothing below this folder is worth searching. Try Deep Search, or switch to This Folder.</value>
+    <value>Nothing below this folder is worth searching. Try Deep Search, or switch to Single.</value>
   </data>
   <data name="SelectRowHint.Text" xml:space="preserve">
     <value>Select a folder to see every icon it can take, or to pick one with Browse.</value>

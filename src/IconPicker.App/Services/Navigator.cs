@@ -9,7 +9,7 @@ namespace IconPicker.App.Services;
 /// <summary>What to open on the folder page.</summary>
 /// <param name="FolderPaths">One folder, or every library for "Rescan all".</param>
 /// <param name="ForcedMode">The mode to open in, or null to detect it from the folder.</param>
-/// <param name="ShortcutPath">When the folder was opened through a shortcut to it, the shortcut, which shows its icon too in "This folder".</param>
+/// <param name="ShortcutPath">When the folder was opened through a shortcut to it, the shortcut, which shows its icon too in "Single".</param>
 internal sealed record FolderRequest(IReadOnlyList<string> FolderPaths, FolderMode? ForcedMode = null, string? ShortcutPath = null)
 {
     public static FolderRequest ForFolder(string folderPath, FolderMode? forcedMode = null)
@@ -17,7 +17,7 @@ internal sealed record FolderRequest(IReadOnlyList<string> FolderPaths, FolderMo
         return new FolderRequest([folderPath], forcedMode);
     }
 
-    /// <summary>A folder, or a shortcut to one (dropped or passed on the command line), which opens its folder in "This folder" to give both the icon.</summary>
+    /// <summary>A folder, or a shortcut to one (dropped or passed on the command line), which opens its folder in "Single" to give both the icon.</summary>
     public static FolderRequest ForPath(string path)
     {
         if (ShortcutReader.IsShortcut(path) && ShortcutReader.ReadFolderTarget(path) is { } target)

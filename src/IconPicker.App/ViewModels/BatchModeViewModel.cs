@@ -16,7 +16,7 @@ public sealed class BatchRowGroup(string name, IEnumerable<BatchRowViewModel> ro
     public string Name { get; } = name;
 }
 
-/// <summary>"Each subfolder": a row per folder with its predicted icon, a side panel to change it, and Apply for the ticked rows.</summary>
+/// <summary>"Batch": a row per folder with its predicted icon, a side panel to change it, and Apply for the ticked rows.</summary>
 public sealed partial class BatchModeViewModel : ObservableObject
 {
     private const int ParallelSearches = 4;

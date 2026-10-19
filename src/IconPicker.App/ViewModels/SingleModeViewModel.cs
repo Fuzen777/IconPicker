@@ -12,7 +12,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace IconPicker.App.ViewModels;
 
-/// <summary>"This folder": the folder's current icon, the one picked for it, and the picker.</summary>
+/// <summary>"Single": the folder's current icon, the one picked for it, and the picker.</summary>
 public sealed partial class SingleModeViewModel : ObservableObject
 {
     private const int LargeIconSize = 256;
