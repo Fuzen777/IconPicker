@@ -46,8 +46,8 @@ public sealed class ApplyingTests
     {
         using var testFolder = new TestFolder();
         var updater = testFolder.CreateFolder("Updater");
-        var versionedExe = new IconSource(Path.Combine(updater.FullName, "app-1.2.3", "Updater.exe"), IconSourceKind.Module);
-        var plainExe = new IconSource(Path.Combine(updater.FullName, "Updater.exe"), IconSourceKind.Module);
+        var versionedExe = new IconSource(testFolder.CreateIconExe(@"Updater\app-1.2.3\Updater.exe").FullName, IconSourceKind.Module);
+        var plainExe = new IconSource(testFolder.CreateIconExe(@"Updater\Updater.exe").FullName, IconSourceKind.Module);
 
         Assert.IsTrue(IconTargetResolver.LinksIntoVersionFolder(updater, versionedExe, IconTarget.Link));
         Assert.IsFalse(IconTargetResolver.LinksIntoVersionFolder(updater, versionedExe, IconTarget.Copy));

@@ -71,6 +71,28 @@ public static class IcoFileBuilder
         return sizes;
     }
 
+    /// <summary>The images an .ico file holds, in order, or null when it isn't a valid .ico file.</summary>
+    public static List<IcoImage>? ReadImages(byte[] iconBytes)
+    {
+        if (ReadImageSizes(iconBytes) is not { } sizes)
+        {
+            return null;
+        }
+        var images = new List<IcoImage>(sizes.Count);
+        for (var i = 0; i < sizes.Count; i++)
+        {
+            var entryOffset = FileHeaderSize + i * EntrySize;
+            var dataSize = BitConverter.ToInt32(iconBytes, entryOffset + 8);
+            var dataOffset = BitConverter.ToInt32(iconBytes, entryOffset + 12);
+            if (dataSize <= 0 || dataOffset < 0 || (long)dataOffset + dataSize > iconBytes.Length)
+            {
+                return null;
+            }
+            images.Add(new IcoImage(iconBytes[entryOffset..(entryOffset + 8)], iconBytes[dataOffset..(dataOffset + dataSize)]));
+        }
+        return images;
+    }
+
     /// <summary>The sizes listed by an .ico file on disk, reading only its header. Null when it isn't a valid .ico file or can't be read.</summary>
     public static IReadOnlyList<(int Width, int Height)>? ReadImageSizes(string iconFilePath)
     {

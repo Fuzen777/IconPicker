@@ -157,7 +157,7 @@ public sealed class SvgCandidateTests
     {
         using var testFolder = new TestFolder();
         var profile = testFolder.CreateFolder("Profile");
-        var builtIcon = testFolder.CreateFile(@"Profile\AppData\Icon Picker\Built\icon.ico", IcoFileBuilder.Build([IcoImage.FromPng(32, await TestImages.CreatePngAsync(32, 32))]));
+        var builtIcon = testFolder.CreateFile(@"Profile\AppData\Icon Picker\Built\icon.ico", IcoFileBuilder.Build([IcoImage.FromPng(256, await TestImages.CreatePngAsync(256, 256))]));
         var source = new IconSource(builtIcon.FullName, IconSourceKind.IconFile, IsBuilt: true);
 
         var plan = await IconTargetResolver.ResolveAsync(profile, source, IconTarget.Link, CancellationToken.None);

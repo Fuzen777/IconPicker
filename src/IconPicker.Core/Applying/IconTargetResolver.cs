@@ -41,6 +41,7 @@ public static class IconTargetResolver
 {
     /// <summary>
     /// Whether the icon is linked rather than copied. Pictures and SVGs are always copied, since they have to be converted, and so are files outside the folder, so every icon stays relative and survives the folder moving.
+    /// So are icons without a 256 px image: a copy gets enlarged ones (see <see cref="SmallIconEnlarger"/>), where a link would leave Explorer drawing them small.
     /// </summary>
     public static bool WillLink(DirectoryInfo folder, IconSource source, IconTarget target)
     {
@@ -48,7 +49,8 @@ public static class IconTargetResolver
             && !source.IsConverted
             && !source.IsBuilt
             && FileHelpers.IsInsideFolder(source.FilePath, folder.FullName)
-            && !IsFolderOwnCopy(folder, source);
+            && !IsFolderOwnCopy(folder, source)
+            && HasFullSizeImage(source);
     }
 
     /// <summary>A link into a version folder (app-1.2.3) breaks at the app's next update.</summary>
@@ -74,14 +76,14 @@ public static class IconTargetResolver
             case IconSourceKind.Module:
                 var extractedIcon = ExeIconExtractor.ExtractIconFile(source.FilePath, source.IconIndex)
                     ?? throw new IconSourceException(IconSourceProblem.NoIcon, $"{source.FilePath} has no readable icon at index {source.IconIndex}.");
-                return IconWritePlan.Copy(extractedIcon);
+                return IconWritePlan.Copy(await SmallIconEnlarger.EnlargeAsync(extractedIcon).ConfigureAwait(false));
             case IconSourceKind.IconFile:
                 var iconFile = await File.ReadAllBytesAsync(source.FilePath, cancellationToken).ConfigureAwait(false);
                 if (IcoFileBuilder.ReadImageSizes(iconFile) is null)
                 {
                     throw new IconSourceException(IconSourceProblem.InvalidIconFile, $"{source.FilePath} is not a valid .ico file.");
                 }
-                return IconWritePlan.Copy(iconFile);
+                return IconWritePlan.Copy(await SmallIconEnlarger.EnlargeAsync(iconFile).ConfigureAwait(false));
             case IconSourceKind.Vector:
                 try
                 {
@@ -101,6 +103,15 @@ public static class IconTargetResolver
                     throw new IconSourceException(IconSourceProblem.UnreadableImage, $"{source.FilePath} can't be converted to an icon.", exception);
                 }
         }
+    }
+
+    /// <summary>Whether an .exe, .dll or .ico source holds a 256 px image, the size Explorer's largest views draw.</summary>
+    private static bool HasFullSizeImage(IconSource source)
+    {
+        var sizes = source.Kind == IconSourceKind.Module
+            ? ExeIconExtractor.ExtractIconFile(source.FilePath, source.IconIndex) is { } iconFile ? IcoFileBuilder.ReadImageSizes(iconFile) : null
+            : IcoFileBuilder.ReadImageSizes(source.FilePath);
+        return sizes is not null && sizes.Any(size => Math.Max(size.Width, size.Height) >= SmallIconEnlarger.FullSize);
     }
 
     /// <summary>Linking to the folder's own folder-icon.ico would delete it, since a link replaces the copy.</summary>
