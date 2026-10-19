@@ -39,6 +39,9 @@ internal sealed class AppSettings
     /// <summary>The width of the picker beside the rows of "Batch", in effective pixels.</summary>
     public double PickerPanelWidth { get; set; } = DefaultPickerPanelWidth;
 
+    /// <summary>The app folder that was given the app's icon (see AppFolderIcon), so it happens once per location.</summary>
+    public string? AppFolderIconPath { get; set; }
+
     /// <summary>The last colors used on built icons (#RRGGBB), newest first.</summary>
     public List<string> RecentColors { get; set; } = [];
 

@@ -42,12 +42,33 @@ public partial class App : Application
             .AddSingleton<IconBuilderService>()
             .BuildServiceProvider();
         _ = Task.Run(BuiltIconCache.DeleteOldIcons);
+        ApplyOwnFolderIcon();
         _mainWindow = new MainWindow();
         Services.GetRequiredService<WindowContext>().Attach(_mainWindow);
         _mainWindow.Activate();
         // A second launch (another right-click, a drop on the shortcut) arrives here instead of opening a second window.
         AppInstance.GetCurrent().Activated += OnRedirectedActivation;
         StartMainWindow(_mainWindow);
+    }
+
+    /// <summary>The app's folder gets the app's icon the first time a release copy starts there.</summary>
+    private static async void ApplyOwnFolderIcon()
+    {
+        var settings = Services.GetRequiredService<SettingsStore>();
+        if (!AppFolderIcon.IsDue(settings.Current))
+        {
+            return;
+        }
+        try
+        {
+            await Task.Run(AppFolderIcon.ApplyAsync);
+            // Back on the window's thread, which follows settings changes.
+            settings.Update(current => current.AppFolderIconPath = AppFolderIcon.AppFolder.FullName);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            ErrorLog.Write(exception);
+        }
     }
 
     private async void StartMainWindow(MainWindow mainWindow)
