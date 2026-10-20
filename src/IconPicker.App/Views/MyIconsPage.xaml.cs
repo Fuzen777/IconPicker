@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace IconPicker.App.Views;
 
-public sealed partial class MyIconsPage : Page, IHasUnappliedChanges
+public sealed partial class MyIconsPage : Page, IHasUnappliedChanges, IIconFileDropTarget
 {
     /// <summary>The builder's own minimum (see IconBuilderControl), kept free when the list is widened.</summary>
     private const double BuilderMinimumWidth = 300;
@@ -41,6 +41,18 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges
     public string DiscardChangesTitle => ViewModel.DiscardChangesTitle;
 
     public string DiscardChangesMessage => ViewModel.DiscardChangesMessage;
+
+    /// <summary>The saved icons take dropped files as new icons; the builder takes them itself.</summary>
+    bool IIconFileDropTarget.TakesDropOn(DependencyObject element)
+    {
+        return IconFileDrop.IsInside(element, SavedIconsPanel);
+    }
+
+    /// <summary>A new icon from the first file, asking first when the builder has unsaved changes.</summary>
+    Task IIconFileDropTarget.DropAsync(DependencyObject element, IReadOnlyList<string> iconFiles)
+    {
+        return ViewModel.NewIconFromFileAsync(iconFiles[0]);
+    }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {

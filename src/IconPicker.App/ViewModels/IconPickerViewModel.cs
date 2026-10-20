@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using IconPicker.App.Services;
 using IconPicker.Core.Builder;
 using IconPicker.Core.Candidates;
+using IconPicker.Core.Folders;
 
 namespace IconPicker.App.ViewModels;
 
@@ -130,6 +131,42 @@ public sealed partial class IconPickerViewModel : ObservableObject
         Choice = candidate;
         HasUserChoice = true;
         ChoiceChangedByUser?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Files dropped on the picker: every icon each one offers (all of an executable's, the one a shortcut shows) joins the top of the grid, in order, and the first is picked.
+    /// An SVG comes as a tile like any other; Customize colors it.
+    /// </summary>
+    public async Task AddFilesAsync(IReadOnlyList<string> filePaths)
+    {
+        IsProblemOpen = false;
+        var addedCandidates = new List<CandidateViewModel>();
+        var filesWithoutIcon = new List<string>();
+        foreach (var filePath in filePaths)
+        {
+            var candidates = await CandidateFinder.InspectFileAsync(filePath, _folder);
+            if (candidates.Count == 0)
+            {
+                filesWithoutIcon.Add(Path.GetFileName(filePath));
+            }
+            addedCandidates.AddRange(candidates.Select(candidate => new CandidateViewModel(candidate, _thumbnailLoader)));
+        }
+        if (filesWithoutIcon.Count > 0)
+        {
+            ShowProblem(Strings.Format("BrowseNoIcon", string.Join(", ", filesWithoutIcon)));
+        }
+        if (addedCandidates.Count == 0)
+        {
+            return;
+        }
+        foreach (var candidate in Enumerable.Reverse(addedCandidates))
+        {
+            KeepAtTop(candidate);
+        }
+        BrowsedModuleName = null;
+        _moduleCandidates = [];
+        RefreshVisibleCandidates();
+        Choose(addedCandidates[0]);
     }
 
     /// <summary>Picks one of "Single"'s recent icons, as Browse would.</summary>
@@ -279,9 +316,10 @@ public sealed partial class IconPickerViewModel : ObservableObject
         IsProblemOpen = true;
     }
 
+    /// <summary>A shortcut from elsewhere was dropped here on purpose, so it shows even with "Include shortcuts" off.</summary>
     private bool PassesShortcutFilter(CandidateViewModel candidate)
     {
-        return IncludeShortcuts || !candidate.Candidate.IsShortcut;
+        return IncludeShortcuts || candidate.Candidate.ShortcutPath is not { } shortcutPath || !FileHelpers.IsInsideFolder(shortcutPath, _folder.FullName);
     }
 
     private void KeepAtTop(CandidateViewModel candidate)

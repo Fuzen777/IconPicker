@@ -1,12 +1,10 @@
 using IconPicker.App.Services;
 using IconPicker.App.Views;
-using IconPicker.Core.Shell;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics;
 using Windows.UI.ViewManagement;
 using Windows.Win32;
@@ -235,29 +233,18 @@ public sealed partial class MainWindow : Window
         FolderItem.Visibility = Visibility.Visible;
     }
 
-    private void OnDragOver(object sender, DragEventArgs e)
+    /// <summary>A folder dropped anywhere opens; icon files dropped on a part that takes them (a folder's icons, the builder) are used there.</summary>
+    private async void OnDragOver(object sender, DragEventArgs e)
     {
-        if (e.DataView.Contains(StandardDataFormats.StorageItems))
-        {
-            e.AcceptedOperation = DataPackageOperation.Link;
-            e.DragUIOverride.Caption = Strings.Get("DropCaption");
-        }
+        await IconFileDrop.ShowDragAsync(RootGrid, e, opensFolders: true);
     }
 
     private async void OnDrop(object sender, DragEventArgs e)
     {
-        if (!e.DataView.Contains(StandardDataFormats.StorageItems))
-        {
-            return;
-        }
-        var droppedItems = await e.DataView.GetStorageItemsAsync();
         // A shortcut to a folder opens its folder, and gets the icon too.
-        var droppedPath = droppedItems
-            .Select(item => item.Path)
-            .FirstOrDefault(path => !string.IsNullOrEmpty(path) && (Directory.Exists(path) || ShortcutReader.ReadFolderTarget(path) is not null));
-        if (droppedPath is not null)
+        if (await IconFileDrop.DropAsync(RootGrid, e) is { } folderPath)
         {
-            await _navigator.OpenFolderAsync(FolderRequest.ForPath(droppedPath));
+            await _navigator.OpenFolderAsync(FolderRequest.ForPath(folderPath));
         }
     }
 }

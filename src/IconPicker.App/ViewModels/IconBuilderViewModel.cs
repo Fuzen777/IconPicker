@@ -232,34 +232,43 @@ public sealed partial class IconBuilderViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseAsync()
     {
-        var filePath = await _pickers.PickIconSourceAsync();
-        if (filePath is null || IconSource.GetKind(filePath) is not { } kind)
+        if (await _pickers.PickIconSourceAsync() is { } filePath)
         {
+            await OpenFileAsync(filePath);
+        }
+    }
+
+    /// <summary>
+    /// A file from Browse, or dropped on the builder: it becomes the glyph, keeping the look so far. An .exe or .dll holding several icons shows them to pick from; a shortcut gives the icon it shows.
+    /// </summary>
+    public async Task OpenFileAsync(string filePath)
+    {
+        var kind = IconSource.GetKind(filePath);
+        if (kind is not (null or IconSourceKind.Module))
+        {
+            BackToSettings();
+            LoadFile(new IconSource(filePath, kind.Value));
             return;
         }
-        if (kind == IconSourceKind.Module)
+        var fileIcons = await CandidateFinder.InspectFileAsync(filePath, new DirectoryInfo(Path.GetDirectoryName(filePath)!));
+        if (fileIcons.Count > 1)
         {
-            var moduleIcons = await CandidateFinder.InspectFileAsync(filePath, new DirectoryInfo(Path.GetDirectoryName(filePath)!));
-            if (moduleIcons.Count > 1)
+            ModuleIcons.Clear();
+            foreach (var moduleIcon in fileIcons)
             {
-                ModuleIcons.Clear();
-                foreach (var moduleIcon in moduleIcons)
-                {
-                    ModuleIcons.Add(new CandidateViewModel(moduleIcon, _thumbnailLoader));
-                }
-                ModuleName = Path.GetFileName(filePath);
-                Pane = BuilderPane.ModuleIcons;
-                return;
+                ModuleIcons.Add(new CandidateViewModel(moduleIcon, _thumbnailLoader));
             }
-            if (moduleIcons.Count == 1)
-            {
-                LoadFile(moduleIcons[0].Source);
-                return;
-            }
-            ProblemText = Strings.Format("BrowseNoIcon", Path.GetFileName(filePath));
+            ModuleName = Path.GetFileName(filePath);
+            Pane = BuilderPane.ModuleIcons;
             return;
         }
-        LoadFile(new IconSource(filePath, kind));
+        BackToSettings();
+        if (fileIcons.Count == 1)
+        {
+            LoadFile(fileIcons[0].Source);
+            return;
+        }
+        ProblemText = Strings.Format("BrowseNoIcon", Path.GetFileName(filePath));
     }
 
     public void PickModuleIcon(CandidateViewModel moduleIcon)

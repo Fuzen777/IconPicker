@@ -11,7 +11,7 @@
   </UserControl.Resources>
 
   <!-- Side by side when there is room (the preview's 208 px, the gap and the settings' 300 px); below that, a smaller preview sits above the settings (see the code-behind). -->
-  <Grid x:Name="RootGrid" ColumnSpacing="24" RowSpacing="16">
+  <Grid x:Name="RootGrid" Background="Transparent" ColumnSpacing="24" RowSpacing="16">
     <Grid.ColumnDefinitions>
       <ColumnDefinition x:Name="PreviewColumn" Width="Auto" />
       <ColumnDefinition x:Name="SettingsColumn" Width="*" MinWidth="300" />

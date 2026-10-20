@@ -14,7 +14,8 @@
   </ContentDialog.Resources>
 
   <!-- Sized to the window when it opens (see FitToWindow). -->
-  <Grid x:Name="ContentGrid" Width="940" Height="580">
+  <!-- Files can be dropped here as anywhere in the window: on the list they open the builder, on the builder they become its glyph. -->
+  <Grid x:Name="ContentGrid" Width="940" Height="580" AllowDrop="True" Background="Transparent" DragOver="OnDragOver" Drop="OnDrop">
     <!-- First step from Icons: the saved icons, then the built-in ones. -->
     <controls:IconListControl ViewModel="{x:Bind List}" Visibility="{x:Bind IsListShown}" />
 

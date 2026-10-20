@@ -1,3 +1,4 @@
+using IconPicker.App.Services;
 using IconPicker.App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -6,8 +7,8 @@ using Windows.Foundation;
 
 namespace IconPicker.App.Controls;
 
-/// <summary>The icon builder, shared by the My icons tab and the dialog opened from a folder's picker.</summary>
-public sealed partial class IconBuilderControl : UserControl
+/// <summary>The icon builder, shared by the My icons tab and the dialog opened from a folder's picker. A file dropped on it becomes the glyph, as with Browse.</summary>
+public sealed partial class IconBuilderControl : UserControl, IIconFileDropTarget
 {
     /// <summary>The preview's 208 px, the 24 px gap and the settings' 300 px: below this, the preview goes above the settings.</summary>
     private const double SideBySideMinimumWidth = 532;
@@ -28,6 +29,17 @@ public sealed partial class IconBuilderControl : UserControl
     {
         get => (IconBuilderViewModel?)GetValue(ViewModelProperty);
         set => SetValue(ViewModelProperty, value);
+    }
+
+    bool IIconFileDropTarget.TakesDropOn(DependencyObject element)
+    {
+        return ViewModel is not null;
+    }
+
+    /// <summary>The builder holds one glyph: the first file is used.</summary>
+    Task IIconFileDropTarget.DropAsync(DependencyObject element, IReadOnlyList<string> iconFiles)
+    {
+        return ViewModel?.OpenFileAsync(iconFiles[0]) ?? Task.CompletedTask;
     }
 
     /// <summary>

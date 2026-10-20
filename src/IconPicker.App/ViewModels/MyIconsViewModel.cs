@@ -68,6 +68,17 @@ public sealed partial class MyIconsViewModel : ObservableObject, IHasUnappliedCh
         }
     }
 
+    /// <summary>A file dropped on the saved icons: a new icon from it.</summary>
+    public async Task NewIconFromFileAsync(string filePath)
+    {
+        if (await ConfirmDiscardingAsync())
+        {
+            Builder.Reset();
+            SelectedIcon = null;
+            await Builder.OpenFileAsync(filePath);
+        }
+    }
+
     /// <summary>The empty tab's invitation: a new icon, starting from the built-in icons.</summary>
     [RelayCommand]
     private async Task StartFromBuiltInIconsAsync()

@@ -98,17 +98,22 @@ public static class CandidateFinder
             .ToList();
     }
 
-    /// <summary>The candidates one file offers: each icon of an executable, or the file itself. Empty when it can't be read.</summary>
+    /// <summary>The candidates one file offers: each icon of an executable, the icon a shortcut shows, or the file itself. Empty when it can't be read.</summary>
     public static async Task<List<IconCandidate>> InspectFileAsync(string filePath, DirectoryInfo folder)
     {
-        var kind = IconSource.GetKind(filePath);
+        var isShortcut = ShortcutReader.IsShortcut(filePath);
+        var kind = isShortcut ? IconSourceKind.Module : IconSource.GetKind(filePath);
         if (kind is null || !File.Exists(filePath))
         {
             return [];
         }
         var file = new FileInfo(filePath);
         var depth = FileHelpers.IsInsideFolder(file.FullName, folder.FullName) ? Path.GetRelativePath(folder.FullName, file.DirectoryName!).Split(Path.DirectorySeparatorChar).Count(part => part != ".") : 0;
-        return await InspectAsync(new ListedFile(file, kind.Value, depth), folder, maximumIconsPerModule: int.MaxValue).ConfigureAwait(false);
+        var listedFile = new ListedFile(file, kind.Value, depth, isShortcut);
+        // A shortcut (dropped on the picker) offers the icon it shows, as it does in a folder's search.
+        return isShortcut
+            ? await InspectShortcutAsync(listedFile, folder).ConfigureAwait(false)
+            : await InspectAsync(listedFile, folder, maximumIconsPerModule: int.MaxValue).ConfigureAwait(false);
     }
 
     private static void ListFiles(DirectoryInfo folder, int depth, List<ListedFile> listedFiles, IReadOnlyList<string> folderNames, CancellationToken cancellationToken)

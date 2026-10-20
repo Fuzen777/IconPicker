@@ -3,10 +3,12 @@ using IconPicker.App.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace IconPicker.App.Views;
 
-public sealed partial class BatchModeView : UserControl
+/// <summary>"Batch": the rows, and the selected row's picker. Files dropped on a row go to that row's picker.</summary>
+public sealed partial class BatchModeView : UserControl, IIconFileDropTarget
 {
     /// <summary>Room the rows keep however wide the picker is made: a checkbox, both icons and a name.</summary>
     private const double RowsMinimumWidth = 300;
@@ -38,6 +40,34 @@ public sealed partial class BatchModeView : UserControl
     }
 
     public BatchModeViewModel ViewModel { get; }
+
+    bool IIconFileDropTarget.TakesDropOn(DependencyObject element)
+    {
+        return FindRow(element) is not null;
+    }
+
+    /// <summary>Selects the row the files were dropped on, so its picker shows them, and adds them there; picking one ticks the row.</summary>
+    async Task IIconFileDropTarget.DropAsync(DependencyObject element, IReadOnlyList<string> iconFiles)
+    {
+        if (FindRow(element) is { } row)
+        {
+            RowList.SelectedItem = row;
+            await row.Picker.AddFilesAsync(iconFiles);
+        }
+    }
+
+    /// <summary>The row an element belongs to, or null outside the rows.</summary>
+    private BatchRowViewModel? FindRow(DependencyObject element)
+    {
+        for (var current = element; current is not null && !ReferenceEquals(current, RowList); current = VisualTreeHelper.GetParent(current))
+        {
+            if (current is ListViewItem container)
+            {
+                return RowList.ItemFromContainer(container) as BatchRowViewModel;
+            }
+        }
+        return null;
+    }
 
     /// <summary>However wide the picker was made, the rows keep their minimum; a narrower window shrinks the picker for now, and widening gives it back.</summary>
     private void OnViewSizeChanged(object sender, SizeChangedEventArgs eventArgs)

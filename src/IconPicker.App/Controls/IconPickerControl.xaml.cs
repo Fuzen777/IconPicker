@@ -1,12 +1,13 @@
 using System.ComponentModel;
+using IconPicker.App.Services;
 using IconPicker.App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace IconPicker.App.Controls;
 
-/// <summary>The ranked icon grid with Browse, used by single mode and by batch mode's side panel.</summary>
-public sealed partial class IconPickerControl : UserControl
+/// <summary>The ranked icon grid with Browse, used by single mode and by batch mode's side panel. Files dropped on it add their icons.</summary>
+public sealed partial class IconPickerControl : UserControl, IIconFileDropTarget
 {
     public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(nameof(ViewModel), typeof(IconPickerViewModel), typeof(IconPickerControl), new PropertyMetadata(null, OnViewModelChanged));
 
@@ -21,6 +22,16 @@ public sealed partial class IconPickerControl : UserControl
     {
         get => (IconPickerViewModel?)GetValue(ViewModelProperty);
         set => SetValue(ViewModelProperty, value);
+    }
+
+    bool IIconFileDropTarget.TakesDropOn(DependencyObject element)
+    {
+        return ViewModel is not null;
+    }
+
+    Task IIconFileDropTarget.DropAsync(DependencyObject element, IReadOnlyList<string> iconFiles)
+    {
+        return ViewModel?.AddFilesAsync(iconFiles) ?? Task.CompletedTask;
     }
 
     private static void OnViewModelChanged(DependencyObject owner, DependencyPropertyChangedEventArgs eventArgs)

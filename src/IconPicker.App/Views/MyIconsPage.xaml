@@ -21,8 +21,8 @@
 
     <TextBlock x:Uid="MyIconsTitle" Grid.ColumnSpan="3" Style="{StaticResource TitleTextBlockStyle}" />
 
-    <!-- Saved icons. -->
-    <Grid Grid.Row="1" RowSpacing="8">
+    <!-- Saved icons. A file dropped here starts a new icon. -->
+    <Grid x:Name="SavedIconsPanel" Grid.Row="1" Background="Transparent" RowSpacing="8">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />

@@ -3,6 +3,7 @@ using IconPicker.App.Services;
 using IconPicker.App.ViewModels;
 using IconPicker.Core.Builder;
 using IconPicker.Core.Candidates;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace IconPicker.App.Views;
@@ -10,7 +11,7 @@ namespace IconPicker.App.Views;
 /// <summary>
 /// The builder opened from a folder's picker. It starts on the icon list (Icons), where a saved icon is picked as it is and a built-in one moves on to the builder, or straight on the builder (an SVG from Browse, Customize). Only one dialog shows at a time, so everything happens inside this one.
 /// </summary>
-public sealed partial class IconBuilderDialog : ContentDialog
+public sealed partial class IconBuilderDialog : ContentDialog, IIconFileDropTarget
 {
     internal IconBuilderDialog(IServiceProvider services)
     {
@@ -52,6 +53,29 @@ public sealed partial class IconBuilderDialog : ContentDialog
         PrimaryButtonText = Strings.Get("UseForFolderButton");
         IsPrimaryButtonEnabled = Builder.HasSource;
         Bindings.Update();
+    }
+
+    /// <summary>The list takes dropped files by opening the builder on them; the builder takes them itself.</summary>
+    bool IIconFileDropTarget.TakesDropOn(DependencyObject element)
+    {
+        return IsListShown;
+    }
+
+    async Task IIconFileDropTarget.DropAsync(DependencyObject element, IReadOnlyList<string> iconFiles)
+    {
+        await Builder.OpenFileAsync(iconFiles[0]);
+        ShowBuilder();
+    }
+
+    /// <summary>The dialog sits above the window, whose own drop handling can't reach it; a folder can't be opened from here.</summary>
+    private async void OnDragOver(object sender, DragEventArgs eventArgs)
+    {
+        await IconFileDrop.ShowDragAsync(ContentGrid, eventArgs, opensFolders: false);
+    }
+
+    private async void OnDrop(object sender, DragEventArgs eventArgs)
+    {
+        await IconFileDrop.DropAsync(ContentGrid, eventArgs);
     }
 
     /// <summary>As large as the builder needs, but never wider or taller than the window allows (it can be as narrow as 760 px).</summary>

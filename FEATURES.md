@@ -2,7 +2,7 @@
 
 ## Opening a Folder
 
-- **Home**: a drop zone with "Choose Folder". Folders can also be dropped anywhere in the window, on any page.
+- **Home**: a drop zone with "Choose Folder". Folders (or shortcuts to them) can also be dropped anywhere in the window, on any page; files dropped on a folder's icons or on the builder are used as icons instead (see Drag and Drop below).
 - **Command line**: `IconPicker.exe "D:\Games\Some Game"` opens that folder. A drive passed as `"D:\"` (as Explorer does) is read correctly.
 - **One window**: launching the app again while it is open hands the folder to the running window and brings it to the front.
 - **Mode detection**: a folder holding a game or app (a usable .exe directly in it, or in a bin-style or version subfolder such as `bin\x64` or `app-1.2.3`) opens in "Single"; a drive opens in "Batch" with Deep Search on; anything else opens in "Batch". The switch under the folder's path changes mode at any time. "Single" is unavailable for a drive, which can't take a folder icon.
@@ -45,6 +45,7 @@
 - **Tiles**: each tile shows the icon, a badge (EXE, DLL, ICO, IMG, SVG, LNK, URL, or MINE for an icon built in the app), the file name (a built icon's own name) and its size ("Scalable" for an SVG); hovering shows its path, and for a shortcut where its icon comes from. Thumbnails are drawn as tiles scroll into view.
 - **Show All**: the best 50 are shown first; "Show All" lists the rest. Large folders only open their best 500 files.
 - **Browse**: any .ico, .exe, .dll, picture or SVG from anywhere. An .exe or .dll holding several icons opens its own grid to pick from, with "Back to the Folder's Icons". An SVG opens the builder (see My Icons), to color it and set it on a background first. Picking an icon while the folder is still being searched stops the search, and the picker says so: its results would only have replaced the pick. A search that finishes at the same moment never overrides a pick either.
+- **Drag and Drop**: files dragged from Explorer, Everything or the desktop onto the icons ("Single", or "Batch"'s side panel) add their icons at the top of the list, and the first is picked, as a pick by hand: .ico files, every icon of an .exe or .dll, pictures, SVGs (as tiles; Customize colors them) and shortcuts (the icon they show, listed even with Include Shortcuts off). Several files at once all add up, and a file without a usable icon is named in a message. Dropped on a "Batch" row, they go to that row's picker: the row is selected and ticked. The drag reads "Use as Icon" where files can go, and shows it can't be dropped elsewhere; a folder still opens wherever it is dropped.
 - **Icons**: your saved icons, then the built-in icons, in one window. A saved icon is picked as it is now (editing it later doesn't change this pick) and moves to the top of My Icons; a built-in icon opens the builder.
 - **Customize**: opens the picked icon in the builder, on a rounded square to start with: any exe, .ico, picture or SVG icon can be set on a background, and an SVG drawn in one color recolored. An icon built earlier reopens as it was.
 - **The builder from a folder**: Use for This Folder picks the result like any other icon (it is always copied); Save to My Icons keeps it as well, or saves the changes to a saved icon being customized.
@@ -68,6 +69,7 @@
   - **Name**: the source's name until another is typed.
   - Every size of the finished icon is drawn afresh, so 16 px stays sharp.
 - **Built-In Icons**: Microsoft's Fluent UI System Icons, 2,977 of them in regular and filled, searchable by name, description and Microsoft's keywords, and drawn in the theme's text color.
+- **Drag and Drop**: a file dropped on the builder becomes its glyph, keeping the look so far, as with Browse (an .exe or .dll with several icons shows them to pick from, and a shortcut gives the icon it shows); dropped on the saved icons, it starts a new icon, asking first when the builder has unsaved changes. In the window that Icons and Customize open, a file dropped on the list opens the builder on it. Only the first of several files is used.
 - **Saving**: Save to My Icons keeps the icon with its own copy of its source (only the chosen icon of an .exe), so it can be edited later even after the original file moves. Editing a saved icon doesn't change folders already using it. Leaving the tab with unsaved changes asks first.
 
 ---

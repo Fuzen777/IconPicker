@@ -26,6 +26,9 @@
   <data name="DropCaption" xml:space="preserve">
     <value>Open in Icon Picker</value>
   </data>
+  <data name="UseAsIconCaption" xml:space="preserve">
+    <value>Use as Icon</value>
+  </data>
 
   <!-- Home -->
   <data name="HomeTitle.Text" xml:space="preserve">

@@ -395,4 +395,19 @@ public sealed class CandidateTests
         Assert.HasCount(1, candidates);
         Assert.AreEqual(icon.FullName, candidates[0].RelativePath);
     }
+
+    [TestMethod]
+    public async Task InspectFileAsync_Shortcut_OffersTheIconItShows()
+    {
+        using var testFolder = new TestFolder();
+        var hades = testFolder.CreateFolder("Hades");
+        var exe = testFolder.CreateIconExe(@"Elsewhere\Game.exe");
+        var shortcut = testFolder.CreateShortcut(@"Desktop\Game.lnk", exe.FullName);
+
+        var candidates = await CandidateFinder.InspectFileAsync(shortcut.FullName, hades);
+
+        Assert.HasCount(1, candidates);
+        Assert.AreEqual(exe.FullName, candidates[0].Source.FilePath);
+        Assert.AreEqual(shortcut.FullName, candidates[0].ShortcutPath);
+    }
 }
