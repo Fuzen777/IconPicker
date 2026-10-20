@@ -9,7 +9,8 @@ using Microsoft.UI.Xaml.Media;
 
 namespace IconPicker.App.Views;
 
-public sealed partial class SingleModeView : UserControl, IIconFilePasteTarget
+/// <summary>"Single": the current, new and recent icons beside the picker. Files dropped anywhere on it, or pasted, go to the picker.</summary>
+public sealed partial class SingleModeView : UserControl, IIconFileDropTarget, IIconFilePasteTarget
 {
     /// <summary>Room the picker keeps however wide the column beside it is made: two icon tiles and a scrollbar.</summary>
     private const double PickerMinimumWidth = 300;
@@ -42,6 +43,17 @@ public sealed partial class SingleModeView : UserControl, IIconFilePasteTarget
     }
 
     public SingleModeViewModel ViewModel { get; }
+
+    bool IIconFileDropTarget.TakesDropOn(DependencyObject element)
+    {
+        return true;
+    }
+
+    /// <summary>A drop on the current, new or recent icons does what a drop on the picker does: the files' icons join it, and the first is picked as the new icon.</summary>
+    Task IIconFileDropTarget.DropAsync(DependencyObject element, IReadOnlyList<string> iconFiles)
+    {
+        return ViewModel.Picker.AddFilesAsync(iconFiles);
+    }
 
     async Task<bool> IIconFilePasteTarget.PasteAsync(IReadOnlyList<string> iconFiles)
     {

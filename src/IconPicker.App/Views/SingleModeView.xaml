@@ -14,7 +14,8 @@
     </MenuFlyout>
   </UserControl.Resources>
 
-  <Grid x:Name="ViewGrid" ColumnSpacing="4" RowSpacing="12" SizeChanged="OnViewSizeChanged">
+  <!-- Transparent so a file dropped anywhere in the view, between its parts too, goes to the picker. -->
+  <Grid x:Name="ViewGrid" Background="Transparent" ColumnSpacing="4" RowSpacing="12" SizeChanged="OnViewSizeChanged">
     <Grid.ColumnDefinitions>
       <ColumnDefinition x:Name="SideColumn" Width="340" />
       <ColumnDefinition Width="Auto" />
