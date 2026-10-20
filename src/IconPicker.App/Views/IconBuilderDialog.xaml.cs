@@ -5,6 +5,7 @@ using IconPicker.Core.Builder;
 using IconPicker.Core.Candidates;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace IconPicker.App.Views;
 
@@ -76,6 +77,22 @@ public sealed partial class IconBuilderDialog : ContentDialog, IIconFileDropTarg
     private async void OnDrop(object sender, DragEventArgs eventArgs)
     {
         await IconFileDrop.DropAsync(ContentGrid, eventArgs);
+    }
+
+    /// <summary>Ctrl+V outside a text box: the first copied icon file becomes the builder's glyph, opening the builder from the list.</summary>
+    private async void OnContentKeyDown(object sender, KeyRoutedEventArgs eventArgs)
+    {
+        if (!IconFilePaste.IsPasteKey(eventArgs))
+        {
+            return;
+        }
+        eventArgs.Handled = true;
+        var pasted = await IconFilePaste.ReadClipboardAsync();
+        if (pasted.IconFiles.Count > 0)
+        {
+            await Builder.OpenFileAsync(pasted.IconFiles[0]);
+            ShowBuilder();
+        }
     }
 
     /// <summary>As large as the builder needs, but never wider or taller than the window allows (it can be as narrow as 760 px).</summary>

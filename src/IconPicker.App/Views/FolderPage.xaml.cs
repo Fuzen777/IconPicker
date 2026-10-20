@@ -10,7 +10,7 @@ namespace IconPicker.App.Views;
 /// <summary>
 /// The open folder. The page is kept while other pages are visited, and shows whichever folder the navigator holds: the same one when coming back, as it was left.
 /// </summary>
-public sealed partial class FolderPage : Page
+public sealed partial class FolderPage : Page, IIconFilePasteTarget
 {
     private bool _isSyncingModeSelector;
 
@@ -60,6 +60,12 @@ public sealed partial class FolderPage : Page
                 ShowContent();
                 break;
         }
+    }
+
+    /// <summary>Pasted icon files go to the mode shown.</summary>
+    Task<bool> IIconFilePasteTarget.PasteAsync(IReadOnlyList<string> iconFiles)
+    {
+        return ModeContent.Content is IIconFilePasteTarget mode ? mode.PasteAsync(iconFiles) : Task.FromResult(false);
     }
 
     private void ShowContent()

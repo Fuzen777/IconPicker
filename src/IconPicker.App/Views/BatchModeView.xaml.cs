@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Media;
 namespace IconPicker.App.Views;
 
 /// <summary>"Batch": the rows, and the selected row's picker. Files dropped on a row go to that row's picker.</summary>
-public sealed partial class BatchModeView : UserControl, IIconFileDropTarget
+public sealed partial class BatchModeView : UserControl, IIconFileDropTarget, IIconFilePasteTarget
 {
     /// <summary>Room the rows keep however wide the picker is made: a checkbox, both icons and a name.</summary>
     private const double RowsMinimumWidth = 300;
@@ -54,6 +54,17 @@ public sealed partial class BatchModeView : UserControl, IIconFileDropTarget
             RowList.SelectedItem = row;
             await row.Picker.AddFilesAsync(iconFiles);
         }
+    }
+
+    /// <summary>Pasted files go to the selected row's picker, ticking the row; with no row selected there is nowhere for them.</summary>
+    async Task<bool> IIconFilePasteTarget.PasteAsync(IReadOnlyList<string> iconFiles)
+    {
+        if (ViewModel.SelectedPicker is not { } picker)
+        {
+            return false;
+        }
+        await picker.AddFilesAsync(iconFiles);
+        return true;
     }
 
     /// <summary>The row an element belongs to, or null outside the rows.</summary>

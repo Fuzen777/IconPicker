@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Graphics;
 using Windows.UI.ViewManagement;
@@ -237,6 +238,25 @@ public sealed partial class MainWindow : Window
     private void OnDragOver(object sender, DragEventArgs e)
     {
         IconFileDrop.ShowDrag(RootGrid, e, opensFolders: true);
+    }
+
+    /// <summary>Ctrl+V outside a text box: copied icon files go to the page's icons or builder, as a drop would; a copied folder opens.</summary>
+    private async void OnRootKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (!IconFilePaste.IsPasteKey(e))
+        {
+            return;
+        }
+        e.Handled = true;
+        var pasted = await IconFilePaste.ReadClipboardAsync();
+        if (pasted.IconFiles.Count > 0 && ContentFrame.Content is IIconFilePasteTarget target && await target.PasteAsync(pasted.IconFiles))
+        {
+            return;
+        }
+        if (pasted.FolderPath is not null)
+        {
+            await _navigator.OpenFolderAsync(FolderRequest.ForPath(pasted.FolderPath));
+        }
     }
 
     private async void OnDrop(object sender, DragEventArgs e)

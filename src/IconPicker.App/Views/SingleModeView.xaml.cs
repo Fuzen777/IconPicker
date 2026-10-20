@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace IconPicker.App.Views;
 
-public sealed partial class SingleModeView : UserControl
+public sealed partial class SingleModeView : UserControl, IIconFilePasteTarget
 {
     /// <summary>Room the picker keeps however wide the column beside it is made: two icon tiles and a scrollbar.</summary>
     private const double PickerMinimumWidth = 300;
@@ -42,6 +42,12 @@ public sealed partial class SingleModeView : UserControl
     }
 
     public SingleModeViewModel ViewModel { get; }
+
+    async Task<bool> IIconFilePasteTarget.PasteAsync(IReadOnlyList<string> iconFiles)
+    {
+        await ViewModel.Picker.AddFilesAsync(iconFiles);
+        return true;
+    }
 
     /// <summary>However wide the column was made, the picker keeps its minimum; a narrower window shrinks the column for now, and widening gives it back.</summary>
     private void OnViewSizeChanged(object sender, SizeChangedEventArgs eventArgs)

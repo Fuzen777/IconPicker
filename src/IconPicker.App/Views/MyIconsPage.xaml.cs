@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace IconPicker.App.Views;
 
-public sealed partial class MyIconsPage : Page, IHasUnappliedChanges, IIconFileDropTarget
+public sealed partial class MyIconsPage : Page, IHasUnappliedChanges, IIconFileDropTarget, IIconFilePasteTarget
 {
     /// <summary>The builder's own minimum (see IconBuilderControl), kept free when the list is widened.</summary>
     private const double BuilderMinimumWidth = 300;
@@ -46,6 +46,13 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges, IIconFileD
     bool IIconFileDropTarget.TakesDropOn(DependencyObject element)
     {
         return IconFileDrop.IsInside(element, SavedIconsPanel);
+    }
+
+    /// <summary>A pasted file becomes the builder's glyph, as a drop on the builder would.</summary>
+    async Task<bool> IIconFilePasteTarget.PasteAsync(IReadOnlyList<string> iconFiles)
+    {
+        await ViewModel.Builder.OpenFileAsync(iconFiles[0]);
+        return true;
     }
 
     /// <summary>A new icon from the first file, asking first when the builder has unsaved changes.</summary>

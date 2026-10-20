@@ -1,6 +1,5 @@
 using System.Runtime.InteropServices;
 using IconPicker.Core.Candidates;
-using IconPicker.Core.Shell;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
@@ -27,7 +26,7 @@ internal static class IconFileDrop
     private static DataPackageView? _readDataView;
 
     /// <summary>Its files, or null while they are being read.</summary>
-    private static DraggedItems? _readItems;
+    private static IconFileSelection? _readItems;
 
     /// <summary>
     /// For DragOver on <paramref name="root"/>: shows what dropping here would do. <paramref name="opensFolders"/> lets a dragged folder open here (the window, not a dialog).
@@ -64,7 +63,7 @@ internal static class IconFileDrop
     {
         var targetUnderPointer = FindTargetUnderPointer(root, eventArgs);
         var dataView = eventArgs.DataView;
-        DraggedItems items;
+        IconFileSelection items;
         // Released before the files are used: the app the files came from waits until then.
         var deferral = eventArgs.GetDeferral();
         try
@@ -131,7 +130,7 @@ internal static class IconFileDrop
     }
 
     /// <summary>The drag's files once read; until then null, and their reading is started (once per drag).</summary>
-    private static DraggedItems? GetItemsOrStartReading(DataPackageView dataView)
+    private static IconFileSelection? GetItemsOrStartReading(DataPackageView dataView)
     {
         if (!ReferenceEquals(dataView, _readDataView))
         {
@@ -152,34 +151,16 @@ internal static class IconFileDrop
         }
     }
 
-    private static async Task<DraggedItems> ReadAsync(DataPackageView dataView)
+    /// <summary>The files a drag or the clipboard holds; empty when the app they came from doesn't hand them over.</summary>
+    public static async Task<IconFileSelection> ReadAsync(DataPackageView dataView)
     {
         try
         {
-            var paths = (await dataView.GetStorageItemsAsync()).Select(item => item.Path).Where(path => !string.IsNullOrEmpty(path)).ToList();
-            return new DraggedItems(paths.FirstOrDefault(IsFolder), paths.Where(IsIconFile).ToList());
+            return IconFileSelection.FromPaths((await dataView.GetStorageItemsAsync()).Select(item => item.Path));
         }
         catch (COMException)
         {
-            // The app the drag came from didn't hand its files over.
-            return DraggedItems.None;
+            return IconFileSelection.None;
         }
-    }
-
-    /// <summary>A folder, or a shortcut to one, which opens wherever it is dropped.</summary>
-    private static bool IsFolder(string path)
-    {
-        return Directory.Exists(path) || ShortcutReader.ReadFolderTarget(path) is not null;
-    }
-
-    /// <summary>A file Browse could pick, or a shortcut that isn't to a folder (its icon is used).</summary>
-    private static bool IsIconFile(string path)
-    {
-        return File.Exists(path) && (IconSource.GetKind(path) is not null || (ShortcutReader.IsShortcut(path) && ShortcutReader.ReadFolderTarget(path) is null));
-    }
-
-    private sealed record DraggedItems(string? FolderPath, IReadOnlyList<string> IconFiles)
-    {
-        public static DraggedItems None { get; } = new(null, []);
     }
 }

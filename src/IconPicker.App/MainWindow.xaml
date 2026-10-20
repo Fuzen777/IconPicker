@@ -8,7 +8,7 @@
   </Window.SystemBackdrop>
 
   <!-- Folders dropped anywhere in the window are opened. -->
-  <Grid x:Name="RootGrid" AllowDrop="True" Background="Transparent" DragOver="OnDragOver" Drop="OnDrop">
+  <Grid x:Name="RootGrid" AllowDrop="True" Background="Transparent" DragOver="OnDragOver" Drop="OnDrop" KeyDown="OnRootKeyDown">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
