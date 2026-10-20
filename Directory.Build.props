@@ -12,7 +12,7 @@
 
   <!-- The app's version, shared by the launcher. A release tag must match it (see AGENTS.md). -->
   <PropertyGroup>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
   </PropertyGroup>
 
   <!-- The app is x64 only through its RuntimeIdentifier; the projects themselves stay AnyCPU so every build lands in the same folder. -->

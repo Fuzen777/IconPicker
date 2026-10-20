@@ -12,6 +12,7 @@ It's a native, portable Windows app (WinUI 3).
 - **Batch** mode, for every subfolder at once: one row per subfolder with its predicted icon, ticked when it has none yet. Apply sets them all, and a deep search finds game and app folders at any depth.
 - **Ranking**: executables named like the folder first, sharp square icons before blurry or wide ones, and uninstallers, crash handlers, and redistributables left out.
 - **My Icons**: build your own icons from Microsoft's Fluent icons, an SVG, a picture, or an exe icon, set on a square, circle, or Windows folder background in your own colors.
+- **Drag and drop**: drag an exe, icon, picture, SVG, or shortcut from Explorer onto the icons or the builder to use it, or copy it (or its path) and press Ctrl+V.
 - **Shortcuts**: a shortcut inside a folder provides the icon it shows, and a shortcut to a folder can get an icon of its own.
 - **Copy or link**: icons are copied into the folder as `folder-icon.ico` by default, so they survive the folder moving or the drive letter changing.
 - **Right-Click Entry** (optional): "Pick Folder Icon…" on folders and drives in Explorer.
