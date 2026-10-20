@@ -23,56 +23,61 @@ internal interface IIconFileDropTarget
 /// </summary>
 internal static class IconFileDrop
 {
-    private static DataPackageView? _lastDataView;
-    private static DraggedItems _lastItems = DraggedItems.None;
+    /// <summary>The drag whose files were read, or are being read.</summary>
+    private static DataPackageView? _readDataView;
 
-    /// <summary>For DragOver on <paramref name="root"/>: shows what dropping here would do. <paramref name="opensFolders"/> lets a dragged folder open here (the window, not a dialog).</summary>
-    public static async Task ShowDragAsync(UIElement root, DragEventArgs eventArgs, bool opensFolders)
+    /// <summary>Its files, or null while they are being read.</summary>
+    private static DraggedItems? _readItems;
+
+    /// <summary>
+    /// For DragOver on <paramref name="root"/>: shows what dropping here would do. <paramref name="opensFolders"/> lets a dragged folder open here (the window, not a dialog).
+    /// Windows takes the answer only when given at once, so the drag's files are read in the background on its first DragOver: until they are, a drag over a part that takes icon files counts as icon files, and anywhere else as a folder.
+    /// DragOver repeats as the pointer moves, so the answer is exact a moment later.
+    /// </summary>
+    public static void ShowDrag(UIElement root, DragEventArgs eventArgs, bool opensFolders)
     {
-        var element = FindElementUnderPointer(root, eventArgs);
-        var deferral = eventArgs.GetDeferral();
-        try
+        if (!eventArgs.DataView.Contains(StandardDataFormats.StorageItems))
         {
-            var items = await ReadAsync(eventArgs.DataView);
-            if (items.IconFiles.Count > 0 && FindTarget(element) is not null)
-            {
-                eventArgs.AcceptedOperation = DataPackageOperation.Copy;
-                eventArgs.DragUIOverride.Caption = Strings.Get("UseAsIconCaption");
-            }
-            else if (opensFolders && items.FolderPath is not null)
-            {
-                eventArgs.AcceptedOperation = DataPackageOperation.Link;
-                eventArgs.DragUIOverride.Caption = Strings.Get("DropCaption");
-            }
-            else
-            {
-                eventArgs.AcceptedOperation = DataPackageOperation.None;
-            }
+            eventArgs.AcceptedOperation = DataPackageOperation.None;
+            return;
         }
-        finally
+        var items = GetItemsOrStartReading(eventArgs.DataView);
+        var usesIconFiles = (items is null || items.IconFiles.Count > 0) && FindTargetUnderPointer(root, eventArgs) is not null;
+        if (usesIconFiles)
         {
-            deferral.Complete();
+            eventArgs.AcceptedOperation = DataPackageOperation.Copy;
+            eventArgs.DragUIOverride.Caption = Strings.Get("UseAsIconCaption");
+        }
+        else if (opensFolders && (items is null || items.FolderPath is not null))
+        {
+            eventArgs.AcceptedOperation = DataPackageOperation.Link;
+            eventArgs.DragUIOverride.Caption = Strings.Get("DropCaption");
+        }
+        else
+        {
+            eventArgs.AcceptedOperation = DataPackageOperation.None;
         }
     }
 
     /// <summary>For Drop on <paramref name="root"/>: hands the icon files to the part under the pointer. Returns the dragged folder when nothing took icon files, for the window to open.</summary>
     public static async Task<string?> DropAsync(UIElement root, DragEventArgs eventArgs)
     {
-        var element = FindElementUnderPointer(root, eventArgs);
+        var targetUnderPointer = FindTargetUnderPointer(root, eventArgs);
+        var dataView = eventArgs.DataView;
         DraggedItems items;
         // Released before the files are used: the app the files came from waits until then.
         var deferral = eventArgs.GetDeferral();
         try
         {
-            items = await ReadAsync(eventArgs.DataView);
+            items = (ReferenceEquals(dataView, _readDataView) ? _readItems : null) ?? await ReadAsync(dataView);
         }
         finally
         {
             deferral.Complete();
         }
-        if (items.IconFiles.Count > 0 && element is not null && FindTarget(element) is { } target)
+        if (items.IconFiles.Count > 0 && targetUnderPointer is { } found)
         {
-            await target.DropAsync(element, items.IconFiles);
+            await found.Target.DropAsync(found.Element, items.IconFiles);
             return null;
         }
         return items.FolderPath;
@@ -91,22 +96,33 @@ internal static class IconFileDrop
         return false;
     }
 
-    /// <summary>The innermost element under the pointer: the event's source, or, when that is the handler's own element, the topmost element found there.</summary>
-    private static DependencyObject? FindElementUnderPointer(UIElement root, DragEventArgs eventArgs)
+    /// <summary>
+    /// The part under the pointer that takes a drop there, and the element under the pointer it was found from: tried from the event's source, then from each element found at the pointer,
+    /// since the source can be the element handling the drag rather than the innermost one.
+    /// </summary>
+    private static (IIconFileDropTarget Target, DependencyObject Element)? FindTargetUnderPointer(UIElement root, DragEventArgs eventArgs)
     {
-        if (eventArgs.OriginalSource is DependencyObject source && !ReferenceEquals(source, root))
+        IEnumerable<DependencyObject> elementsUnderPointer = VisualTreeHelper.FindElementsInHostCoordinates(eventArgs.GetPosition(null), root);
+        if (eventArgs.OriginalSource is DependencyObject source)
         {
-            return source;
+            elementsUnderPointer = elementsUnderPointer.Prepend(source);
         }
-        return VisualTreeHelper.FindElementsInHostCoordinates(eventArgs.GetPosition(null), root).FirstOrDefault() ?? root;
+        foreach (var element in elementsUnderPointer)
+        {
+            if (FindTarget(element) is { } target)
+            {
+                return (target, element);
+            }
+        }
+        return null;
     }
 
     /// <summary>The nearest part, at or around <paramref name="element"/>, that takes a drop there.</summary>
-    private static IIconFileDropTarget? FindTarget(DependencyObject? element)
+    private static IIconFileDropTarget? FindTarget(DependencyObject element)
     {
         for (var current = element; current is not null; current = VisualTreeHelper.GetParent(current))
         {
-            if (current is IIconFileDropTarget target && target.TakesDropOn(element!))
+            if (current is IIconFileDropTarget target && target.TakesDropOn(element))
             {
                 return target;
             }
@@ -114,29 +130,40 @@ internal static class IconFileDrop
         return null;
     }
 
-    /// <summary>The drag's files, read once per drag: DragOver repeats with every move of the pointer.</summary>
+    /// <summary>The drag's files once read; until then null, and their reading is started (once per drag).</summary>
+    private static DraggedItems? GetItemsOrStartReading(DataPackageView dataView)
+    {
+        if (!ReferenceEquals(dataView, _readDataView))
+        {
+            _readDataView = dataView;
+            _readItems = null;
+            _ = KeepItemsAsync(dataView);
+        }
+        return _readItems;
+    }
+
+    private static async Task KeepItemsAsync(DataPackageView dataView)
+    {
+        var items = await ReadAsync(dataView);
+        // A newer drag may have started meanwhile.
+        if (ReferenceEquals(dataView, _readDataView))
+        {
+            _readItems = items;
+        }
+    }
+
     private static async Task<DraggedItems> ReadAsync(DataPackageView dataView)
     {
-        if (ReferenceEquals(dataView, _lastDataView))
+        try
         {
-            return _lastItems;
+            var paths = (await dataView.GetStorageItemsAsync()).Select(item => item.Path).Where(path => !string.IsNullOrEmpty(path)).ToList();
+            return new DraggedItems(paths.FirstOrDefault(IsFolder), paths.Where(IsIconFile).ToList());
         }
-        var items = DraggedItems.None;
-        if (dataView.Contains(StandardDataFormats.StorageItems))
+        catch (COMException)
         {
-            try
-            {
-                var paths = (await dataView.GetStorageItemsAsync()).Select(item => item.Path).Where(path => !string.IsNullOrEmpty(path)).ToList();
-                items = new DraggedItems(paths.FirstOrDefault(IsFolder), paths.Where(IsIconFile).ToList());
-            }
-            catch (COMException)
-            {
-                // The app the drag came from didn't hand its files over.
-            }
+            // The app the drag came from didn't hand its files over.
+            return DraggedItems.None;
         }
-        _lastDataView = dataView;
-        _lastItems = items;
-        return items;
     }
 
     /// <summary>A folder, or a shortcut to one, which opens wherever it is dropped.</summary>

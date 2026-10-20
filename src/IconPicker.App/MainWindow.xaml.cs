@@ -234,9 +234,9 @@ public sealed partial class MainWindow : Window
     }
 
     /// <summary>A folder dropped anywhere opens; icon files dropped on a part that takes them (a folder's icons, the builder) are used there.</summary>
-    private async void OnDragOver(object sender, DragEventArgs e)
+    private void OnDragOver(object sender, DragEventArgs e)
     {
-        await IconFileDrop.ShowDragAsync(RootGrid, e, opensFolders: true);
+        IconFileDrop.ShowDrag(RootGrid, e, opensFolders: true);
     }
 
     private async void OnDrop(object sender, DragEventArgs e)

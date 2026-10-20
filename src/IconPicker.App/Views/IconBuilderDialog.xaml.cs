@@ -68,9 +68,9 @@ public sealed partial class IconBuilderDialog : ContentDialog, IIconFileDropTarg
     }
 
     /// <summary>The dialog sits above the window, whose own drop handling can't reach it; a folder can't be opened from here.</summary>
-    private async void OnDragOver(object sender, DragEventArgs eventArgs)
+    private void OnDragOver(object sender, DragEventArgs eventArgs)
     {
-        await IconFileDrop.ShowDragAsync(ContentGrid, eventArgs, opensFolders: false);
+        IconFileDrop.ShowDrag(ContentGrid, eventArgs, opensFolders: false);
     }
 
     private async void OnDrop(object sender, DragEventArgs eventArgs)
