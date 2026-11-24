@@ -35,7 +35,7 @@ internal static class AppFolderIcon
                 return;
             }
             var appIcon = new IconSource(Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico"), IconSourceKind.IconFile);
-            await IconApplyService.ApplyAsync([new IconChange(AppFolder.FullName, IconChangeKind.Set, appIcon)], IconTarget.Copy).ConfigureAwait(false);
+            await IconApplyService.ApplyAsync((IconChange[])[new IconChange(AppFolder.FullName, IconChangeKind.Set, appIcon)], IconTarget.Copy).ConfigureAwait(false);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {

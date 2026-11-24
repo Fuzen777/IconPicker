@@ -94,7 +94,7 @@ public sealed partial class SingleModeViewModel : ObservableObject
         Picker.IsLoading = true;
         try
         {
-            var candidates = await CandidateFinder.FindAsync(_folder, [_folder.Name], searchCancellation.Token);
+            var candidates = await CandidateFinder.FindAsync(_folder, (string[])[_folder.Name], searchCancellation.Token);
             Picker.SetCandidates(candidates);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
@@ -113,7 +113,7 @@ public sealed partial class SingleModeViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanApply))]
     private Task ApplyAsync()
     {
-        return RunChangesAsync([new IconChange(_folder.FullName, IconChangeKind.Set, Picker.Choice!.Source, _shortcutPath)]);
+        return RunChangesAsync((IconChange[])[new IconChange(_folder.FullName, IconChangeKind.Set, Picker.Choice!.Source, _shortcutPath)]);
     }
 
     private bool CanRemove => !IsBusy && State.HasCustomIcon;
@@ -121,7 +121,7 @@ public sealed partial class SingleModeViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanRemove))]
     private Task RemoveAsync()
     {
-        return RunChangesAsync([new IconChange(_folder.FullName, IconChangeKind.Remove, ShortcutPath: _shortcutPath)]);
+        return RunChangesAsync((IconChange[])[new IconChange(_folder.FullName, IconChangeKind.Remove, ShortcutPath: _shortcutPath)]);
     }
 
     public void PickRecentIcon(CandidateViewModel recentIcon)

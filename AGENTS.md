@@ -32,7 +32,7 @@ title: AGENTS
 | Script | What it does |
 | --- | --- |
 | `Scripts\Build.cmd` | Builds the solution in Debug |
-| `Scripts\Check.cmd` | Builds with warnings as errors, runs the tests and checks formatting. Run it before every commit. |
+| `Scripts\Check.cmd` | Builds from scratch with warnings as errors, runs the tests and checks formatting. Run it before every commit. |
 | `Scripts\Run.cmd [folder]` | Builds and starts the app, optionally on a folder |
 | `Scripts\Install.cmd` | Publishes Release, self-contained, to `%LocalAppData%\Programs\Icon Picker` and adds a Start menu shortcut |
 | `Scripts\Publish.cmd <folder>` | Publishes the release layout to a folder: the launcher `IconPicker.exe` and the licences at the top, the app in `lib\`; used by Package and Install |
@@ -45,6 +45,8 @@ title: AGENTS
 - Package versions are central in `Directory.Packages.props`.
 - Releases: set `<Version>` in `Directory.Build.props`, commit, then push a matching tag (`git tag v0.2.0`, `git push origin v0.2.0`). `.github/workflows/release.yml` then runs Check, makes the zip and publishes the GitHub release (a pre-release for 0.x) with `.github/release-notes.md` above the generated notes. Running the workflow by hand builds the zip without publishing. Code signing comes later: [Code Signing](DOCUMENTATION/Specs/Code%20Signing.md).
 - SVGs are drawn with Svg.Skia and SkiaSharp, referenced by Core. `Directory.Build.targets` keeps the native packages' `.pdb` files (about 120 MB) out of every build and publish, and the tests project sets the win-x64 `RuntimeIdentifier` so only those natives are copied. SkiaSharp 4 marks the paint-only `DrawImage`/`DrawBitmap` overloads obsolete, which fails the build: use the `SKSamplingOptions` ones.
+- In the app, a collection expression with items passed as `IReadOnlyList<T>`, `IReadOnlyCollection<T>` or `IEnumerable<T>` fails the build (`CsWinRT1032`: the compiler picks a hidden type for it, which WinRT can't handle once trimmed). Cast it to an array: `(string[])[folderPath]`. Empty ones (`[]`) are fine.
+- There is no changelog: a release's notes are `.github/release-notes.md` followed by the notes GitHub generates from the commits.
 - The project is its own git repository, public at https://github.com/Fuzen777/IconPicker; the Coding monorepo it sits in ignores this folder. Commits use the GitHub noreply address set in this repository's git config, so no personal email is published. `README.md` and the other files GitHub shows stay standard GFM, without Obsidian admonitions.
 
 ## Technical Notes

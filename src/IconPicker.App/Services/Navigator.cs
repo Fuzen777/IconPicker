@@ -14,7 +14,7 @@ internal sealed record FolderRequest(IReadOnlyList<string> FolderPaths, FolderMo
 {
     public static FolderRequest ForFolder(string folderPath, FolderMode? forcedMode = null)
     {
-        return new FolderRequest([folderPath], forcedMode);
+        return new FolderRequest((string[])[folderPath], forcedMode);
     }
 
     /// <summary>A folder, or a shortcut to one (dropped or passed on the command line), which opens its folder in "Single" to give both the icon.</summary>
@@ -22,7 +22,7 @@ internal sealed record FolderRequest(IReadOnlyList<string> FolderPaths, FolderMo
     {
         if (ShortcutReader.IsShortcut(path) && ShortcutReader.ReadFolderTarget(path) is { } target)
         {
-            return new FolderRequest([target.FullName], FolderMode.Single, path);
+            return new FolderRequest((string[])[target.FullName], FolderMode.Single, path);
         }
         return ForFolder(path);
     }
