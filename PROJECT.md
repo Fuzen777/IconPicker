@@ -1,7 +1,7 @@
 # Icon Picker
 
 > [!abstract]
-> A native Windows app (WinUI 3) that gives folders a proper icon. Point it at a game or app folder and it ranks every icon it finds inside (exe icons, `.ico` files, images) so you can pick one. Point it at a library and it does the same for every subfolder at once, showing its predictions for review before anything is written. It grows out of `C:\Google Drive\Coding\PowerShell\Set Folder Icons.ps1` and stays compatible with the icons that script makes.
+> A native Windows app (WinUI 3) that gives folders a proper icon. Point it at a game or app folder and it ranks every icon it finds inside (exe icons, `.ico` files, images) so you can pick one. Point it at a library and it does the same for every subfolder at once, showing its predictions for review before anything is written. It grows out of the PowerShell script `Set Folder Icons.ps1` and stays compatible with the icons that script makes.
 
 ## Goal
 

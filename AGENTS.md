@@ -6,7 +6,7 @@ title: AGENTS
 ## Introduction
 
 - Icon Picker is a native Windows app (WinUI 3, C#) that gives folders a custom icon picked from the icons and images inside them, one folder at a time or for every subfolder at once.
-- It grew out of `C:\Google Drive\Coding\PowerShell\Set Folder Icons.ps1` and stays compatible with the icons that script writes. [PROJECT.md](./PROJECT.md) holds the original spec and its decisions.
+- It grew out of the PowerShell script `Set Folder Icons.ps1` (removed since) and stays compatible with the icons that script wrote. [PROJECT.md](./PROJECT.md) holds the original spec and its decisions.
 
 ## Rules
 
