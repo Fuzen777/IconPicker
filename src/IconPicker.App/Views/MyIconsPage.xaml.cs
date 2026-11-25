@@ -140,6 +140,11 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges, IIconFileD
         Run(ViewModel.DeleteCommand);
     }
 
+    private void OnOpenIconFolderClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.OpenFolderCommand);
+    }
+
     private void OnCopyIconPathClick(object sender, RoutedEventArgs eventArgs)
     {
         Run(ViewModel.CopyIconPathCommand);

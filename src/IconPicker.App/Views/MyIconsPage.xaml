@@ -28,6 +28,11 @@
         </MenuFlyoutItem.Icon>
       </MenuFlyoutItem>
       <MenuFlyoutSeparator />
+      <MenuFlyoutItem x:Uid="OpenIconFolderMenuItem" Click="OnOpenIconFolderClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE838;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
       <MenuFlyoutItem x:Uid="CopyIconPathMenuItem" Click="OnCopyIconPathClick">
         <MenuFlyoutItem.Icon>
           <FontIcon Glyph="&#xE8A5;" />

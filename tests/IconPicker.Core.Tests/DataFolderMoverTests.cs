@@ -69,6 +69,32 @@ public sealed class DataFolderMoverTests
     }
 
     [TestMethod]
+    public void Move_SavedIconFolders_KeepTheirOwnIcon()
+    {
+        // A saved icon's folder is ReadOnly with a hidden, system desktop.ini, both in the moved data and in data already there.
+        using var testFolder = new TestFolder();
+        var source = testFolder.CreateFolder("Data").FullName;
+        var movedIconFolder = CreateFolderWithOwnIcon(testFolder, @"Data\My icons\abc");
+        var destination = testFolder.CreateFolder("Icon Picker").FullName;
+        CreateFolderWithOwnIcon(testFolder, @"Icon Picker\My icons\abc");
+
+        DataFolderMover.Move(source, destination);
+
+        Assert.IsFalse(Directory.Exists(source));
+        var destinationIconFolder = Path.Combine(destination, @"My icons\abc");
+        Assert.IsTrue(File.GetAttributes(destinationIconFolder).HasFlag(FileAttributes.ReadOnly));
+        Assert.IsTrue(File.GetAttributes(Path.Combine(destinationIconFolder, "desktop.ini")).HasFlag(FileAttributes.Hidden));
+        Assert.IsFalse(Directory.Exists(movedIconFolder));
+
+        // Into a missing folder, through the partial copy.
+        var portable = Path.Combine(testFolder.Root.FullName, "Portable");
+        DataFolderMover.Move(destination, portable);
+
+        Assert.IsFalse(Directory.Exists(destination));
+        Assert.IsTrue(File.GetAttributes(Path.Combine(portable, @"My icons\abc")).HasFlag(FileAttributes.ReadOnly));
+    }
+
+    [TestMethod]
     public void Move_ThatFailsToCopy_LeavesTheSourceAndNoDestination()
     {
         using var testFolder = new TestFolder();
@@ -97,5 +123,15 @@ public sealed class DataFolderMoverTests
         Assert.IsNull(LaunchArguments.Parse("--move-data elsewhere 12").DataMove);
         Assert.IsNull(LaunchArguments.Parse("--move-data portable").DataMove);
         Assert.IsNull(LaunchArguments.Parse("--move-data portable 12").FolderPath);
+    }
+
+    private static string CreateFolderWithOwnIcon(TestFolder testFolder, string relativePath)
+    {
+        testFolder.CreateTextFile(relativePath + @"\icon.ico", "icon");
+        var desktopIni = testFolder.CreateTextFile(relativePath + @"\desktop.ini", "[.ShellClassInfo]\r\nIconResource=icon.ico,0\r\n");
+        desktopIni.Attributes = FileAttributes.Hidden | FileAttributes.System;
+        var folder = new DirectoryInfo(Path.Combine(testFolder.Root.FullName, relativePath));
+        folder.Attributes |= FileAttributes.ReadOnly;
+        return folder.FullName;
     }
 }

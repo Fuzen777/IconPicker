@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using IconPicker.Core.Builder;
 using IconPicker.Core.Candidates;
+using IconPicker.Core.Folders;
 using IconPicker.Core.Icons;
 using IconPicker.Core.Library;
 
@@ -185,6 +186,56 @@ public sealed class BuilderTests
 
         Assert.HasCount(1, store.List());
         Assert.IsFalse(Directory.Exists(renamed.FolderPath));
+    }
+
+    [TestMethod]
+    public async Task MyIconsStore_SavedFolders_ShowTheirOwnIcon()
+    {
+        using var testFolder = new TestFolder();
+        var store = new MyIconsStore(Path.Combine(testFolder.Root.FullName, "My icons"));
+        var source = BuiltInSource();
+        var built = (await IconComposer.BuildAsync(source.Glyph, IconStyle.Default))!;
+
+        var saved = await store.SaveAsync(source, IconStyle.Default, "Folder", built);
+        var copy = await store.DuplicateAsync(saved, "Copy");
+        var updated = await store.UpdateAsync(saved, source, IconStyle.Default with { Shape = IconShape.Square }, "Folder", built);
+
+        foreach (var folder in new[] { saved.FolderPath, copy.FolderPath })
+        {
+            Assert.IsTrue(MyIconsStore.ShowsOwnFolderIcon(folder), folder);
+            Assert.AreEqual("icon.ico,0", DesktopIniFile.Read(folder).GetValue("IconResource"));
+            Assert.AreEqual(FileAttributes.Hidden | FileAttributes.System, File.GetAttributes(Path.Combine(folder, DesktopIniFile.FileName)) & (FileAttributes.Hidden | FileAttributes.System));
+            Assert.IsFalse(File.Exists(Path.Combine(folder, FolderIconWriter.IconFileName)));
+        }
+        Assert.HasCount(2, store.List());
+        Assert.AreEqual(updated.Id, store.FindByIconPath(updated.IconPath)!.Id);
+
+        store.Delete(updated);
+        store.Delete(copy);
+
+        Assert.IsEmpty(Directory.GetFileSystemEntries(store.RootFolder));
+    }
+
+    [TestMethod]
+    public async Task MyIconsStore_EnsureOwnFolderIcons_FixesOnlyFoldersWithout()
+    {
+        using var testFolder = new TestFolder();
+        var store = new MyIconsStore(Path.Combine(testFolder.Root.FullName, "My icons"));
+        var source = BuiltInSource();
+        var built = (await IconComposer.BuildAsync(source.Glyph, IconStyle.Default))!;
+        var older = await store.SaveAsync(source, IconStyle.Default, "Older", built);
+        var newer = await store.SaveAsync(source, IconStyle.Default, "Newer", built);
+        // As saved before folders had their own icon.
+        FileHelpers.DeleteHiddenFile(Path.Combine(older.FolderPath, DesktopIniFile.FileName));
+        new DirectoryInfo(older.FolderPath).Attributes = FileAttributes.Directory;
+        var newerDesktopIniTime = File.GetLastWriteTimeUtc(Path.Combine(newer.FolderPath, DesktopIniFile.FileName));
+
+        Assert.AreEqual(1, store.EnsureOwnFolderIcons());
+        Assert.AreEqual(0, store.EnsureOwnFolderIcons());
+
+        Assert.IsTrue(MyIconsStore.ShowsOwnFolderIcon(older.FolderPath));
+        Assert.AreEqual(newerDesktopIniTime, File.GetLastWriteTimeUtc(Path.Combine(newer.FolderPath, DesktopIniFile.FileName)));
+        Assert.AreEqual(0, new MyIconsStore(Path.Combine(testFolder.Root.FullName, "Missing")).EnsureOwnFolderIcons());
     }
 
     [TestMethod]

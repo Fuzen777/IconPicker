@@ -64,6 +64,11 @@ public static class DataFolderMover
                 File.AppendAllText(destinationFile, File.ReadAllText(file));
                 continue;
             }
+            // A hidden or read-only file (a saved icon's desktop.ini) can't be overwritten until its attributes are cleared; the copy brings them back.
+            if (File.Exists(destinationFile))
+            {
+                File.SetAttributes(destinationFile, FileAttributes.Normal);
+            }
             File.Copy(file, destinationFile, overwrite: true);
         }
         foreach (var subFolder in Directory.EnumerateDirectories(sourceFolder))
@@ -76,6 +81,12 @@ public static class DataFolderMover
             var destinationSubFolder = Path.Combine(destinationFolder, folderName);
             Directory.CreateDirectory(destinationSubFolder);
             CopyContents(subFolder, destinationSubFolder, isTopLevel: false);
+            // Explorer only reads a folder's desktop.ini (a saved icon's own icon) when the folder is ReadOnly or System.
+            var shellAttributes = File.GetAttributes(subFolder) & (FileAttributes.ReadOnly | FileAttributes.System);
+            if (shellAttributes != 0)
+            {
+                File.SetAttributes(destinationSubFolder, File.GetAttributes(destinationSubFolder) | shellAttributes);
+            }
         }
     }
 
@@ -99,7 +110,7 @@ public static class DataFolderMover
         }
     }
 
-    /// <summary>Deletes a folder and everything in it, read-only files included.</summary>
+    /// <summary>Deletes a folder and everything in it, read-only files and folders included.</summary>
     private static void DeleteFolder(string folder)
     {
         if (!Directory.Exists(folder))
@@ -109,6 +120,10 @@ public static class DataFolderMover
         foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
         {
             File.SetAttributes(file, FileAttributes.Normal);
+        }
+        foreach (var subFolder in Directory.EnumerateDirectories(folder, "*", SearchOption.AllDirectories))
+        {
+            File.SetAttributes(subFolder, FileAttributes.Directory);
         }
         Directory.Delete(folder, recursive: true);
     }

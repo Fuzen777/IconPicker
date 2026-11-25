@@ -631,6 +631,9 @@ Details were saved to {1}.</value>
   <data name="DeleteIconMenuItem.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="OpenIconFolderMenuItem.Text" xml:space="preserve">
+    <value>Open Folder</value>
+  </data>
   <data name="CopyIconPathMenuItem.Text" xml:space="preserve">
     <value>Copy Icon Path</value>
   </data>

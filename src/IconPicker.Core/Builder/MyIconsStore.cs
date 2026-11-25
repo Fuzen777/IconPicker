@@ -1,5 +1,7 @@
 using System.Text.Json;
 using IconPicker.Core.Candidates;
+using IconPicker.Core.Folders;
+using IconPicker.Core.Shell;
 
 namespace IconPicker.Core.Builder;
 
@@ -24,6 +26,7 @@ public sealed record SavedIcon(string Id, string FolderPath, IconRecipe Recipe)
 
 /// <summary>
 /// The icons saved to My icons, in %LocalAppData%\Icon Picker\My icons: one folder each, holding recipe.json, a copy of the source, the finished icon.ico and a preview.png. The copy makes every icon self-contained: moving or deleting the original file never breaks it.
+/// Each folder shows its own icon.ico in Explorer (a desktop.ini linking to it), since the folder names are only ids.
 /// </summary>
 public sealed class MyIconsStore(string rootFolder)
 {
@@ -32,6 +35,9 @@ public sealed class MyIconsStore(string rootFolder)
     public const string PreviewFileName = "preview.png";
     private const string SourceFileStem = "source";
     private const string UnfinishedSuffix = ".saving";
+
+    /// <summary>Relative, so the folder keeps its icon when the data folder moves.</summary>
+    private static readonly IconWritePlan OwnFolderIconPlan = IconWritePlan.Link(IconFileName, 0);
 
     public string RootFolder { get; } = rootFolder;
 
@@ -98,8 +104,29 @@ public sealed class MyIconsStore(string rootFolder)
             await WriteIconFilesAsync(unfinishedFolder, builtIcon).ConfigureAwait(false);
             await WriteRecipeAsync(unfinishedFolder, recipe).ConfigureAwait(false);
         }).ConfigureAwait(false);
+        TryShowOwnFolderIcon(finalFolder, iconFileChanged: false);
         RaiseChanged();
         return new SavedIcon(id, finalFolder, recipe);
+    }
+
+    /// <summary>Gives every saved icon's folder its own icon in Explorer, skipping those that already show it. Returns how many were given one. Never throws.</summary>
+    public int EnsureOwnFolderIcons()
+    {
+        try
+        {
+            return List().Count(savedIcon => TryShowOwnFolderIcon(savedIcon.FolderPath, iconFileChanged: false));
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return 0;
+        }
+    }
+
+    /// <summary>Whether the folder's desktop.ini links to its own icon.ico and Explorer reads it.</summary>
+    public static bool ShowsOwnFolderIcon(string folder)
+    {
+        var state = FolderIconState.Read(new DirectoryInfo(folder));
+        return !state.IsBroken && string.Equals(state.IconSetting, OwnFolderIconPlan.IconSetting, StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>Saves a saved icon's new look, and its new source when it was given another glyph. Folders already using it keep their own copy until it is applied again.</summary>
@@ -121,6 +148,7 @@ public sealed class MyIconsStore(string rootFolder)
         {
             File.Delete(savedIcon.SourcePath);
         }
+        TryShowOwnFolderIcon(savedIcon.FolderPath, iconFileChanged: true);
         RaiseChanged();
         return savedIcon with { Recipe = recipe };
     }
@@ -152,6 +180,8 @@ public sealed class MyIconsStore(string rootFolder)
             }
             await WriteRecipeAsync(unfinishedFolder, recipe).ConfigureAwait(false);
         }).ConfigureAwait(false);
+        // Only the files above are copied, so the copy gets a desktop.ini of its own.
+        TryShowOwnFolderIcon(finalFolder, iconFileChanged: false);
         RaiseChanged();
         return new SavedIcon(id, finalFolder, recipe);
     }
@@ -160,6 +190,10 @@ public sealed class MyIconsStore(string rootFolder)
     {
         if (Directory.Exists(savedIcon.FolderPath))
         {
+            // The folder's own icon left it ReadOnly and its desktop.ini hidden and system, which would stop the deletion.
+            FileHelpers.DeleteHiddenFile(Path.Combine(savedIcon.FolderPath, DesktopIniFile.FileName));
+            var folder = new DirectoryInfo(savedIcon.FolderPath);
+            folder.Attributes &= ~(FileAttributes.ReadOnly | FileAttributes.System);
             Directory.Delete(savedIcon.FolderPath, recursive: true);
         }
         RaiseChanged();
@@ -196,6 +230,31 @@ public sealed class MyIconsStore(string rootFolder)
             }
             throw;
         }
+    }
+
+    /// <summary>
+    /// Points the folder's desktop.ini at its own icon.ico, unless it already does; after <paramref name="iconFileChanged"/>, Explorer is told to redraw it either way.
+    /// Best-effort: the icon is saved whether or not Explorer shows it. Returns whether desktop.ini was written.
+    /// </summary>
+    private static bool TryShowOwnFolderIcon(string folder, bool iconFileChanged)
+    {
+        try
+        {
+            if (!ShowsOwnFolderIcon(folder))
+            {
+                FolderIconWriter.SetIcon(new DirectoryInfo(folder), OwnFolderIconPlan);
+                return true;
+            }
+            if (iconFileChanged)
+            {
+                ShellNotifier.NotifyItemChanged(folder);
+            }
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            // Explorer shows a plain folder instead; nothing else depends on it.
+        }
+        return false;
     }
 
     private static bool IsValidId(string id)

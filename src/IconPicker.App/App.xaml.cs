@@ -46,6 +46,8 @@ public partial class App : Application
             .BuildServiceProvider();
         _ = Task.Run(BuiltIconCache.DeleteOldIcons);
         _ = Task.Run(Services.GetRequiredService<RecentIconStore>().DeleteUnlisted);
+        // Icons saved before their folders got an icon of their own, or folders that lost it in a move.
+        _ = Task.Run(Services.GetRequiredService<MyIconsStore>().EnsureOwnFolderIcons);
         ApplyOwnFolderIcon();
         _mainWindow = new MainWindow();
         Services.GetRequiredService<WindowContext>().Attach(_mainWindow);

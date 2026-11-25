@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using IconPicker.App.Services;
@@ -44,7 +45,7 @@ public sealed partial class MyIconsViewModel : ObservableObject, IHasUnappliedCh
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSelection))]
     [NotifyCanExecuteChangedFor(nameof(EditCommand), nameof(DuplicateCommand), nameof(RenameCommand), nameof(DeleteCommand))]
-    [NotifyCanExecuteChangedFor(nameof(CopyIconPathCommand), nameof(CopyFolderPathCommand), nameof(CopyIconCommand))]
+    [NotifyCanExecuteChangedFor(nameof(OpenFolderCommand), nameof(CopyIconPathCommand), nameof(CopyFolderPathCommand), nameof(CopyIconCommand))]
     public partial SavedIconViewModel? SelectedIcon { get; set; }
 
     public bool HasSelection => SelectedIcon is not null;
@@ -152,6 +153,16 @@ public sealed partial class MyIconsViewModel : ObservableObject, IHasUnappliedCh
         if (Builder.EditedIcon is { } savedIcon)
         {
             RefreshAndSelect(savedIcon.Id);
+        }
+    }
+
+    /// <summary>The selected icon's own folder in My icons, opened in the file manager.</summary>
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void OpenFolder()
+    {
+        if (SelectedIcon is { } selectedIcon)
+        {
+            Process.Start(new ProcessStartInfo(selectedIcon.SavedIcon.FolderPath) { UseShellExecute = true })?.Dispose();
         }
     }
 
