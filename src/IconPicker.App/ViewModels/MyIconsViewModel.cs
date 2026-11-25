@@ -5,6 +5,9 @@ using IconPicker.App.Services;
 using IconPicker.Core.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace IconPicker.App.ViewModels;
 
@@ -41,6 +44,7 @@ public sealed partial class MyIconsViewModel : ObservableObject, IHasUnappliedCh
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSelection))]
     [NotifyCanExecuteChangedFor(nameof(EditCommand), nameof(DuplicateCommand), nameof(RenameCommand), nameof(DeleteCommand))]
+    [NotifyCanExecuteChangedFor(nameof(CopyIconPathCommand), nameof(CopyFolderPathCommand), nameof(CopyIconCommand))]
     public partial SavedIconViewModel? SelectedIcon { get; set; }
 
     public bool HasSelection => SelectedIcon is not null;
@@ -149,6 +153,56 @@ public sealed partial class MyIconsViewModel : ObservableObject, IHasUnappliedCh
         {
             RefreshAndSelect(savedIcon.Id);
         }
+    }
+
+    /// <summary>The selected icon's icon.ico, as a path.</summary>
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void CopyIconPath()
+    {
+        if (SelectedIcon is { } selectedIcon)
+        {
+            CopyText(selectedIcon.SavedIcon.IconPath);
+        }
+    }
+
+    /// <summary>The selected icon's own folder in My icons, as a path.</summary>
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void CopyFolderPath()
+    {
+        if (SelectedIcon is { } selectedIcon)
+        {
+            CopyText(selectedIcon.SavedIcon.FolderPath);
+        }
+    }
+
+    /// <summary>The selected icon itself: its preview as an image, for pasting into image apps, and its icon.ico as a file, for pasting into Explorer or back into the app.</summary>
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private async Task CopyIconAsync()
+    {
+        if (SelectedIcon is not { } selectedIcon)
+        {
+            return;
+        }
+        var package = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+        var preview = await StorageFile.GetFileFromPathAsync(selectedIcon.SavedIcon.PreviewPath);
+        package.SetBitmap(RandomAccessStreamReference.CreateFromFile(preview));
+        var icon = await StorageFile.GetFileFromPathAsync(selectedIcon.SavedIcon.IconPath);
+        package.SetStorageItems(new IStorageItem[] { icon });
+        SetClipboard(package);
+    }
+
+    private static void CopyText(string text)
+    {
+        var package = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+        package.SetText(text);
+        SetClipboard(package);
+    }
+
+    /// <summary>Flushed, so what was copied stays on the clipboard after the app closes.</summary>
+    private static void SetClipboard(DataPackage package)
+    {
+        Clipboard.SetContent(package);
+        Clipboard.Flush();
     }
 
     private async Task<bool> ConfirmDiscardingAsync()

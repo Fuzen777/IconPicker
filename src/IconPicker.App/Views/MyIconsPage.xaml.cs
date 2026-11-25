@@ -3,8 +3,11 @@ using IconPicker.App.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace IconPicker.App.Views;
 
@@ -91,6 +94,72 @@ public sealed partial class MyIconsPage : Page, IHasUnappliedChanges, IIconFileD
         if (ViewModel.EditCommand.CanExecute(null))
         {
             ViewModel.EditCommand.Execute(null);
+        }
+    }
+
+    /// <summary>A right-click on a saved icon, or the menu key on one: selects it, so the menu acts on it as the toolbar would, and opens its menu at the pointer or by the tile.</summary>
+    private void OnSavedIconContextRequested(UIElement sender, ContextRequestedEventArgs eventArgs)
+    {
+        var element = eventArgs.OriginalSource as DependencyObject;
+        while (element is not null and not GridViewItem)
+        {
+            element = VisualTreeHelper.GetParent(element);
+        }
+        if (element is not GridViewItem container || SavedIconGrid.ItemFromContainer(container) is not SavedIconViewModel savedIcon)
+        {
+            return;
+        }
+        SavedIconGrid.SelectedItem = savedIcon;
+        ViewModel.SelectedIcon = savedIcon;
+        var options = new FlyoutShowOptions();
+        if (eventArgs.TryGetPosition(container, out var position))
+        {
+            options.Position = position;
+        }
+        ((MenuFlyout)Resources["SavedIconMenu"]).ShowAt(container, options);
+        eventArgs.Handled = true;
+    }
+
+    private void OnEditIconClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.EditCommand);
+    }
+
+    private void OnDuplicateIconClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.DuplicateCommand);
+    }
+
+    private void OnRenameIconClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.RenameCommand);
+    }
+
+    private void OnDeleteIconClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.DeleteCommand);
+    }
+
+    private void OnCopyIconPathClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.CopyIconPathCommand);
+    }
+
+    private void OnCopyFolderPathClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.CopyFolderPathCommand);
+    }
+
+    private void OnCopyIconClick(object sender, RoutedEventArgs eventArgs)
+    {
+        Run(ViewModel.CopyIconCommand);
+    }
+
+    private static void Run(ICommand command)
+    {
+        if (command.CanExecute(null))
+        {
+            command.Execute(null);
         }
     }
 }

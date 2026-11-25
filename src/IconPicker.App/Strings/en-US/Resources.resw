@@ -619,6 +619,27 @@ Details were saved to {1}.</value>
   <data name="DeleteIconButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="EditIconMenuItem.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="DuplicateIconMenuItem.Text" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="RenameIconMenuItem.Text" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="DeleteIconMenuItem.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="CopyIconPathMenuItem.Text" xml:space="preserve">
+    <value>Copy Icon Path</value>
+  </data>
+  <data name="CopyFolderPathMenuItem.Text" xml:space="preserve">
+    <value>Copy Folder Path</value>
+  </data>
+  <data name="CopyIconMenuItem.Text" xml:space="preserve">
+    <value>Copy Icon</value>
+  </data>
   <data name="MyIconsEmptyTitle.Text" xml:space="preserve">
     <value>No Icons Yet</value>
   </data>

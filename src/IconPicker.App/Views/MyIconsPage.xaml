@@ -4,6 +4,48 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:IconPicker.App.Controls">
+  <Page.Resources>
+    <!-- A saved icon's right-click menu: the toolbar's actions, then copying it or where it lives. -->
+    <MenuFlyout x:Key="SavedIconMenu">
+      <MenuFlyoutItem x:Uid="EditIconMenuItem" Click="OnEditIconClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE70F;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+      <MenuFlyoutItem x:Uid="DuplicateIconMenuItem" Click="OnDuplicateIconClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE8C8;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+      <MenuFlyoutItem x:Uid="RenameIconMenuItem" Click="OnRenameIconClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE8AC;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+      <MenuFlyoutItem x:Uid="DeleteIconMenuItem" Click="OnDeleteIconClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE74D;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+      <MenuFlyoutSeparator />
+      <MenuFlyoutItem x:Uid="CopyIconPathMenuItem" Click="OnCopyIconPathClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE8A5;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+      <MenuFlyoutItem x:Uid="CopyFolderPathMenuItem" Click="OnCopyFolderPathClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xE8B7;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+      <MenuFlyoutItem x:Uid="CopyIconMenuItem" Click="OnCopyIconClick">
+        <MenuFlyoutItem.Icon>
+          <FontIcon Glyph="&#xEB9F;" />
+        </MenuFlyoutItem.Icon>
+      </MenuFlyoutItem>
+    </MenuFlyout>
+  </Page.Resources>
+
   <!--
     The saved icons, a divider that resizes them, and the builder. The list's width is remembered; it never squeezes the builder below its own minimum,
     and the builder stacks its preview above its settings when narrow, so the page fits the window's minimum width without scrolling sideways.
@@ -51,7 +93,8 @@
           SelectedItem="{x:Bind ViewModel.SelectedIcon, Mode=OneWay}"
           SelectionMode="Single"
           SelectionChanged="OnSavedIconSelectionChanged"
-          DoubleTapped="OnSavedIconDoubleTapped" />
+          DoubleTapped="OnSavedIconDoubleTapped"
+          ContextRequested="OnSavedIconContextRequested" />
       <StackPanel Grid.Row="1" Margin="0,24,0,0" Spacing="12" Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay}">
         <TextBlock x:Uid="MyIconsEmptyTitle" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
         <TextBlock x:Uid="MyIconsEmptyMessage" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
